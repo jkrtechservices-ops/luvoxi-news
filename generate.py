@@ -15,7 +15,35 @@ CONTACT_EMAIL = "contact@luvoxi.online"
 CITIES = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
           "Philadelphia", "San Antonio", "Dallas", "Austin", "Miami"]
 MAX_POSTS_PER_RUN = 3
-MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
+
+def pick_model():
+    """Gemini ka chalta hua model apne aap dhoondhta hai."""
+    pref = os.getenv("GEMINI_MODEL")
+    if pref:
+        return pref
+    names = []
+    try:
+        r = requests.get("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
+                         headers={"x-goog-api-key": os.getenv("GEMINI_API_KEY", "")}, timeout=30)
+        names = [m["name"].split("/")[-1] for m in r.json().get("models", [])
+                 if "generateContent" in m.get("supportedGenerationMethods", [])]
+    except Exception as e:
+        print("model list fail:", e)
+    for alias in ("gemini-flash-lite-latest", "gemini-flash-latest"):
+        if alias in names:
+            return alias
+    bad = ("image", "tts", "live", "audio", "embed", "robotics", "computer", "gemma", "imagen", "veo", "learnlm")
+    ok = [n for n in names if n.startswith("gemini") and not any(b in n for b in bad)]
+    for key in ("flash-lite", "flash"):
+        for n in sorted(ok, reverse=True):
+            if key in n:
+                return n
+    return "gemini-flash-latest"
+
+
+MODEL = pick_model()
+print("Using model:", MODEL)
 
 # Adsterra code yahan paste karna (baad me)
 AD_HEADER = ""
@@ -313,63 +341,4 @@ def build_site(posts):
     # static pages
     static = {
         "/about/": ("About", f"<h1>About</h1><p>{esc(SITE_NAME)} publishes short local news briefs from major US cities. Every brief links to the original reporting.</p>"),
-        "/contact/": ("Contact", f"<h1>Contact</h1><p>Corrections or takedown requests: <a href='mailto:{CONTACT_EMAIL}'>{CONTACT_EMAIL}</a></p>"),
-        "/privacy/": ("Privacy Policy", "<h1>Privacy Policy</h1><p>We do not collect personal data directly. Third-party advertising partners may use cookies to show ads. You can disable cookies in your browser settings.</p>"),
-        "/disclaimer/": ("Disclaimer", "<h1>Disclaimer</h1><p>Briefs are written with AI assistance from publicly available headlines and may contain errors. Always check the original source linked in each story.</p>"),
-    }
-    for path, (t, b) in static.items():
-        write(path, page(f"{t} | {SITE_NAME}", t, f'<article class="post">{b}</article>', path))
-
-    sm = "".join(f"<url><loc>{SITE_URL}{u}</loc></url>" for u in urls)
-    write("/sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>')
-    write("/robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n")
-
-
-# ---------------- MAIN ----------------
-def main():
-    DATA.parent.mkdir(exist_ok=True)
-    posts = json.loads(DATA.read_text()) if DATA.exists() else []
-    seen = {p["link"] for p in posts} | {p["title"].lower() for p in posts}
-    made = 0
-
-    if GEMINI_KEY:
-        start = datetime.date.today().toordinal() * 3 + datetime.datetime.utcnow().hour // 8
-        order = [CITIES[(start + i) % len(CITIES)] for i in range(len(CITIES))]
-        for city in order:
-            if made >= MAX_POSTS_PER_RUN:
-                break
-            try:
-                items = fetch_news(city)
-            except Exception as e:
-                print("rss fail", city, e)
-                continue
-            for it in items[:15]:
-                if not it["link"] or it["link"] in seen:
-                    continue
-                if is_blocked(it["title"] + " " + it["desc"]):
-                    continue
-                try:
-                    art = write_article(it, city)
-                    slug = slugify(art["title"]) + "-" + hashlib.md5(it["link"].encode()).hexdigest()[:5]
-                    posts.append({
-                        "slug": slug, "title": art["title"], "summary": art["summary"][:160],
-                        "paragraphs": art["paragraphs"], "city": city, "source": it["source"],
-                        "link": it["link"], "date": datetime.date.today().strftime("%b %d, %Y"),
-                        "ts": time.time(), "image": get_image(art.get("image_query") or city + " city", slug)})
-                    seen.add(it["link"])
-                    made += 1
-                    print("posted:", art["title"])
-                    time.sleep(6)
-                except Exception as e:
-                    print("article fail:", e)
-                break
-    else:
-        print("GEMINI_API_KEY not set - sirf site rebuild ho rahi hai")
-
-    DATA.write_text(json.dumps(posts, ensure_ascii=False, indent=1))
-    build_site(posts)
-    print(f"done. new posts: {made}, total: {len(posts)}")
-
-
-if __name__ == "__main__":
-    main()
+        "/contact/": ("Contact", f"<h1>Contact</h1><p>Corrections or takedown requests: <a href='mailto:{CONTACT_EMAIL}'>{CONTACT_EMAIL}</a></p>
