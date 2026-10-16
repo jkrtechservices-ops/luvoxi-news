@@ -3,6 +3,9 @@ name: Publish news
 on:
   schedule:
     - cron: "0 */6 * * *"
+  push:
+    paths:
+      - "run-now.txt"
   workflow_dispatch:
     inputs:
       trend:
@@ -38,8 +41,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-          TREND_PER_RUN: ${{ github.event.inputs.trend || '1' }}
-          GUIDE_PER_RUN: ${{ github.event.inputs.guide || '1' }}
+          TREND_PER_RUN: ${{ github.event.inputs.trend || (github.event_name == 'push' && '2' || '1') }}
+          GUIDE_PER_RUN: ${{ github.event.inputs.guide || (github.event_name == 'push' && '2' || '1') }}
 
       - name: Commit changes
         run: |
