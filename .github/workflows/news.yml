@@ -1,13 +1,28 @@
 name: Publish news
 
-on: {push: {branches: [main]}, schedule: [{cron: "0 */8 * * *"}], workflow_dispatch: {}}
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      trend:
+        description: "Trending posts"
+        default: "1"
+      guide:
+        description: "City guide posts"
+        default: "1"
 
 permissions:
   contents: write
 
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
 
@@ -21,11 +36,19 @@ jobs:
         run: python generate.py
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          TREND_PER_RUN: ${{ github.event.inputs.trend || '1' }}
+          GUIDE_PER_RUN: ${{ github.event.inputs.guide || '1' }}
 
       - name: Commit changes
         run: |
           git config user.name "news-bot"
           git config user.email "bot@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || (git commit -m "auto: new posts" && git push)
+          git diff --cached --quiet || (git commit -m "auto: new posts" && git pull --rebase && git push)
+
+      - name: Ping IndexNow (Bing and others)
+        run: |
+          sleep 150
+          python generate.py --ping
