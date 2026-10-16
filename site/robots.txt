@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://luvoxi.online/sitemap.xml
