@@ -54,7 +54,9 @@ AD_SIDEBAR = ""
 # Sensitive topics skip
 BLOCK_WORDS = ["kill", "shoot", "murder", "dead", "death", "died", "arrest", "crash",
                "stabb", "rape", "assault", "suspect", "victim", "abuse", "suicide",
-               "lawsuit", "sued", "charged", "police"]
+               "lawsuit", "sued", "charged", "police", "remembered", "obituary",
+               "funeral", "memorial", "passed away", "threat", "lockdown", "gunman",
+               "overdose", "missing", "fire", "explosion", "injur", "hospital"]
 # ==========================================
 
 GEMINI_KEY = os.getenv("GEMINI_API_KEY", "")
@@ -124,10 +126,17 @@ Return ONLY JSON with these keys:
 "image_query": 2-3 generic English words for a stock photo (no people names)."""
     body = {"contents": [{"parts": [{"text": prompt}]}],
             "generationConfig": {"responseMimeType": "application/json", "temperature": 0.4}}
-    r = requests.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent",
-        headers={"x-goog-api-key": GEMINI_KEY, "Content-Type": "application/json"},
-        json=body, timeout=90)
+    r = None
+    for attempt in range(4):
+        r = requests.post(
+            f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:generateContent",
+            headers={"x-goog-api-key": GEMINI_KEY, "Content-Type": "application/json"},
+            json=body, timeout=90)
+        if r.status_code in (429, 500, 503):
+            print("gemini busy, retry", attempt + 1, r.status_code)
+            time.sleep(10 * (attempt + 1))
+            continue
+        break
     r.raise_for_status()
     txt = r.json()["candidates"][0]["content"]["parts"][0]["text"]
     data = json.loads(txt)
@@ -138,12 +147,17 @@ Return ONLY JSON with these keys:
 # ---------------- 3. IMAGE ----------------
 def get_image(query, slug):
     if not PIXABAY_KEY:
+        print("PIXABAY_API_KEY missing")
         return ""
     try:
         r = requests.get("https://pixabay.com/api/", timeout=30, params={
-            "key": PIXABAY_KEY, "q": query, "image_type": "photo",
+            "key": PIXABAY_KEY.strip(), "q": query, "image_type": "photo",
             "orientation": "horizontal", "safesearch": "true", "per_page": 5})
-        hits = r.json().get("hits", [])
+        try:
+            hits = r.json().get("hits", [])
+        except ValueError:
+            print("pixabay error:", r.status_code, r.text[:150])
+            return ""
         if not hits:
             return ""
         img = requests.get(hits[0]["webformatURL"], timeout=30).content
@@ -357,11 +371,25 @@ def build_site(posts):
 def main():
     DATA.parent.mkdir(exist_ok=True)
     posts = json.loads(DATA.read_text()) if DATA.exists() else []
+
+    # purani sensitive posts apne aap hata do
+    before = len(posts)
+    posts = [p for p in posts if not is_blocked(p["title"] + " " + " ".join(p["paragraphs"]))]
+    if len(posts) != before:
+        print("removed sensitive old posts:", before - len(posts))
+
+    # bina image wali posts me image bharo (max 5 per run)
+    filled = 0
+    for p in posts:
+        if not p.get("image") and filled < 5:
+            p["image"] = get_image(p["city"] + " city", p["slug"])
+            filled += 1
+
     seen = {p["link"] for p in posts} | {p["title"].lower() for p in posts}
     made = 0
 
     if GEMINI_KEY:
-        start = datetime.date.today().toordinal() * 3 + datetime.datetime.utcnow().hour // 8
+        start = datetime.date.today().toordinal() * 3 + datetime.datetime.now(datetime.timezone.utc).hour // 8
         order = [CITIES[(start + i) % len(CITIES)] for i in range(len(CITIES))]
         for city in order:
             if made >= MAX_POSTS_PER_RUN:
@@ -378,6 +406,10 @@ def main():
                     continue
                 try:
                     art = write_article(it, city)
+                    if is_blocked(art["title"] + " " + " ".join(art["paragraphs"])):
+                        print("skipped sensitive:", art["title"])
+                        seen.add(it["link"])
+                        continue
                     slug = slugify(art["title"]) + "-" + hashlib.md5(it["link"].encode()).hexdigest()[:5]
                     posts.append({
                         "slug": slug, "title": art["title"], "summary": art["summary"][:160],
