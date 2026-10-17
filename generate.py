@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Luvoxi News generator (v3).
+"""Luvoxi News generator (v4).
 Trending topics (Google Trends RSS) + evergreen city guides
--> Gemini research (Google Search) -> Groq long article -> Pixabay image -> static site in ./site
+-> research (Gemini Google Search, backup Groq web search) -> Groq long article -> Pixabay image -> static site in ./site
 """
 import os, re, sys, json, html, hashlib, time, datetime, random
 import xml.etree.ElementTree as ET
@@ -16,10 +16,16 @@ SITE_URL = "https://luvoxi.online"
 CONTACT_EMAIL = "contact@luvoxi.online"
 CITIES = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
           "Philadelphia", "San Antonio", "Dallas", "Austin", "Miami"]
+# Chhote shehar/suburbs (kam competition): guides pehle inke banenge
+EXTRA_PLACES = ["Plano, TX", "Frisco, TX", "Katy, TX", "The Woodlands, TX", "Round Rock, TX",
+                "Cedar Park, TX", "Scottsdale, AZ", "Chandler, AZ", "Gilbert, AZ", "Tempe, AZ",
+                "Naperville, IL", "Evanston, IL", "Jersey City, NJ", "Hoboken, NJ", "Pasadena, CA",
+                "Irvine, CA", "Fort Lauderdale, FL", "Coral Springs, FL", "Brooklyn, NY", "Arlington, TX"]
+PLACES = EXTRA_PLACES + CITIES
 TREND_PER_RUN = int(os.getenv("TREND_PER_RUN") or "1")   # har run me trending posts
 GUIDE_PER_RUN = int(os.getenv("GUIDE_PER_RUN") or "1")   # har run me city guides
 MIN_WORDS = {"trend": 700, "guide": 1000}
-POST_VERSION = 3
+POST_VERSION = 4
 GROQ_GAP = 40   # free limit (8K tokens/min) ke liye do Groq calls ke beech seconds
 
 GUIDE_TEMPLATES = [
@@ -183,7 +189,7 @@ def trend_candidates(seen):
 
 def next_guide(seen):
     for tid, text in GUIDE_TEMPLATES:
-        for city in CITIES:
+        for city in PLACES:
             key = f"guide:{city}:{tid}"
             if key not in seen:
                 return {"kind": "guide", "key": key, "city": city, "topic": text.format(city=city), "hints": ""}
@@ -191,39 +197,54 @@ def next_guide(seen):
 
 
 # ---------------- 2. AI: RESEARCH + WRITING ----------------
-_G = {"model": None, "fails": 0}
+_G = {"model": None, "names": None, "gfails": 0, "qfails": 0}
+
+
+def gemini_names():
+    if _G["names"] is None:
+        try:
+            r = requests.get("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
+                             headers={"x-goog-api-key": GEMINI_KEY}, timeout=30)
+            _G["names"] = [m["name"].split("/")[-1] for m in r.json().get("models", [])
+                           if "generateContent" in m.get("supportedGenerationMethods", [])]
+        except Exception as e:
+            print("model list fail:", str(e)[:100])
+            _G["names"] = []
+    return _G["names"]
 
 
 def gemini_model():
     if _G["model"]:
         return _G["model"]
-    pref = os.getenv("GEMINI_MODEL")
-    name = pref or "gemini-flash-latest"
-    if not pref:
-        try:
-            r = requests.get("https://generativelanguage.googleapis.com/v1beta/models?pageSize=200",
-                             headers={"x-goog-api-key": GEMINI_KEY}, timeout=30)
-            names = [m["name"].split("/")[-1] for m in r.json().get("models", [])
-                     if "generateContent" in m.get("supportedGenerationMethods", [])]
-            for alias in ("gemini-flash-lite-latest", "gemini-flash-latest"):
-                if alias in names:
-                    name = alias
-                    break
-        except Exception as e:
-            print("model list fail:", str(e)[:100])
+    name = os.getenv("GEMINI_MODEL") or "gemini-flash-latest"
+    if not os.getenv("GEMINI_MODEL"):
+        names = gemini_names()
+        for alias in ("gemini-flash-lite-latest", "gemini-flash-latest"):
+            if alias in names:
+                name = alias
+                break
     _G["model"] = name
     print("Gemini model:", name)
     return name
 
 
-def gemini(body, tries=4):
+def research_models():
+    """Search wali research ke liye pehle bada flash model, phir lite."""
+    names = gemini_names()
+    cands = ([os.getenv("GEMINI_MODEL")] if os.getenv("GEMINI_MODEL") else []) + \
+        ["gemini-flash-latest", "gemini-flash-lite-latest"]
+    out = [m for m in cands if m and (not names or m in names)]
+    return out or ["gemini-flash-latest"]
+
+
+def gemini(body, tries=4, model=None):
     r = None
     for attempt in range(tries):
         r = requests.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/{gemini_model()}:generateContent",
+            f"https://generativelanguage.googleapis.com/v1beta/models/{model or gemini_model()}:generateContent",
             headers={"x-goog-api-key": GEMINI_KEY, "Content-Type": "application/json"},
             json=body, timeout=120)
-        if r.status_code in (429, 500, 503):
+        if r.status_code in (429, 500, 503) and attempt < tries - 1:
             print("gemini busy, retry", attempt + 1, r.status_code)
             time.sleep(10 * (attempt + 1))
             continue
@@ -301,9 +322,68 @@ def llm(prompt, max_tokens=5000):
     raise RuntimeError("koi AI key nahi mili (GROQ_API_KEY / GEMINI_API_KEY)")
 
 
+def research_gemini(prompt):
+    body = {"contents": [{"parts": [{"text": prompt}]}],
+            "tools": [{"google_search": {}}], "generationConfig": {"temperature": 0.2}}
+    for rnd in range(2):
+        for m in research_models():
+            try:
+                resp = gemini(body, tries=1, model=m)
+                data = parse_json(text_of(resp))
+                sources = []
+                for c in resp["candidates"][0].get("groundingMetadata", {}).get("groundingChunks", []):
+                    w = c.get("web") or {}
+                    if w.get("uri") and w["uri"] not in [x["url"] for x in sources]:
+                        sources.append({"title": w.get("title") or "Source", "url": w["uri"]})
+                print("research via gemini:", m)
+                return data, sources
+            except Exception as e:
+                print("gemini research", m, "failed:", str(e)[:110])
+        if rnd == 0:
+            time.sleep(25)
+    _G["gfails"] += 1
+    return None, []
+
+
+def research_groq(prompt):
+    """Backup: Groq ke compound models (built-in web search)."""
+    last = None
+    for model in ("groq/compound-mini", "groq/compound"):
+        for key in GROQ_KEYS:
+            gap = GROQ_GAP - (time.time() - _GQ["last"])
+            if gap > 0:
+                time.sleep(gap)
+            try:
+                r = requests.post("https://api.groq.com/openai/v1/chat/completions",
+                                  headers={"Authorization": f"Bearer {key}"}, timeout=180,
+                                  json={"model": model, "temperature": 0.2,
+                                        "messages": [{"role": "user", "content": prompt}]})
+                _GQ["last"] = time.time()
+                if r.status_code != 200:
+                    last = r.text[:120]
+                    continue
+                msg = r.json()["choices"][0]["message"]
+                data = parse_json(msg.get("content") or "")
+                sources = []
+                for t in msg.get("executed_tools") or []:
+                    for res in ((t.get("search_results") or {}).get("results") or []):
+                        u = res.get("url")
+                        if u and u not in [x["url"] for x in sources]:
+                            sources.append({"title": res.get("title") or u.split("/")[2], "url": u})
+                print("research via groq:", model)
+                return data, sources
+            except Exception as e:
+                last = e
+    print("groq research failed:", str(last)[:120])
+    _G["qfails"] += 1
+    return None, []
+
+
 def research(cand):
-    """Gemini + Google Search se verified facts. None = research available nahi."""
-    if not GEMINI_KEY or _G["fails"] >= 2:
+    """Verified facts jama karta hai. None = research available nahi."""
+    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 2
+    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 2
+    if not gemini_ok and not groq_ok:
         return None
     if cand["kind"] == "guide":
         what = f'a practical city guide titled "{cand["topic"]}"'
@@ -314,32 +394,26 @@ def research(cand):
                 "health claim, politics or elections, or if you cannot find reliable sources.")
     hints = ("Related headlines:\n" + cand["hints"] + "\n") if cand["hints"] else ""
     prompt = f"""You are a research assistant for a US news and guide website.
-Use Google Search to research {what}. Report verified facts only.
+Use web search to research {what}. Report verified facts only.
 {hints}
 {skip}
 
 Return ONLY one JSON object (no markdown) like:
 {{"skip": false, "reason": "", "facts": ["14-18 short standalone facts, one sentence each, with concrete names, places and dates where sources support them"], "questions": ["5 questions readers commonly ask about this"]}}"""
-    try:
-        resp = gemini({"contents": [{"parts": [{"text": prompt}]}],
-                       "tools": [{"google_search": {}}], "generationConfig": {"temperature": 0.2}})
-        data = parse_json(text_of(resp))
-        if data.get("skip"):
-            return {"skip": True, "reason": str(data.get("reason", ""))[:100]}
-        facts = [clean(f) for f in data.get("facts", []) if str(f).strip()]
-        if len(facts) < 5:
-            return {"skip": True, "reason": "too few facts"}
-        sources = []
-        for c in resp["candidates"][0].get("groundingMetadata", {}).get("groundingChunks", []):
-            w = c.get("web") or {}
-            if w.get("uri") and w["uri"] not in [s["url"] for s in sources]:
-                sources.append({"title": w.get("title") or "Source", "url": w["uri"]})
-        return {"skip": False, "facts": facts[:18], "questions": [clean(q) for q in data.get("questions", [])][:6],
-                "sources": sources[:5]}
-    except Exception as e:
-        _G["fails"] += 1
-        print("research failed:", str(e)[:150])
+    data, sources = None, []
+    if gemini_ok:
+        data, sources = research_gemini(prompt)
+    if data is None and groq_ok and _G["qfails"] < 2:
+        data, sources = research_groq(prompt)
+    if data is None:
         return None
+    if data.get("skip"):
+        return {"skip": True, "reason": str(data.get("reason", ""))[:100]}
+    facts = [clean(f) for f in data.get("facts", []) if str(f).strip()]
+    if len(facts) < 5:
+        return {"skip": True, "reason": "too few facts"}
+    return {"skip": False, "facts": facts[:18], "questions": [clean(q) for q in data.get("questions", [])][:6],
+            "sources": sources[:5]}
 
 
 SCHEMA = """{
@@ -378,6 +452,7 @@ RULES:
 - Write for people first: plain English, short paragraphs, varied sentence length, specific names and examples when the notes support them.
 - Use the main keyword naturally in the title, the intro and one heading. Never stuff keywords.
 - Never invent facts, numbers, quotes, names or dates. Never claim personal experience (no "I visited").
+- Name specific schools, businesses, restaurants, streets or prices ONLY if they appear in the research notes. Never make claims about crime rates, safety levels, school rankings, test scores or home prices unless they are in the notes; describe such topics in general terms instead.
 - Do not copy sentences from any source. No quotes longer than 5 words.
 - No filler openers ("In today's fast-paced world") and avoid the words delve, tapestry, bustling, vibrant.
 - Each section answers a different question; headings are specific (never "Introduction").
@@ -445,15 +520,15 @@ def write_long(cand, notes):
 
 
 # ---------------- 3. IMAGE ----------------
-def get_image(query, slug, fallback=""):
+def get_image(query, slug, fallbacks=()):
     if not PIXABAY_KEY:
         print("PIXABAY_API_KEY missing")
         return ""
-    for q in [x for x in (query, fallback) if x]:
+    for q in [x for x in (query,) + tuple(fallbacks) if x]:
         try:
             r = requests.get("https://pixabay.com/api/", timeout=30, params={
                 "key": PIXABAY_KEY, "q": q, "image_type": "photo",
-                "orientation": "horizontal", "safesearch": "true", "per_page": 5})
+                "orientation": "horizontal", "safesearch": "true", "per_page": 20})
             try:
                 hits = r.json().get("hits", [])
             except ValueError:
@@ -461,7 +536,8 @@ def get_image(query, slug, fallback=""):
                 return ""
             if not hits:
                 continue
-            img = requests.get(hits[0]["webformatURL"], timeout=30).content
+            pick = int(hashlib.md5(slug.encode()).hexdigest(), 16) % len(hits)   # har post ki alag photo
+            img = requests.get(hits[pick]["webformatURL"], timeout=30).content
             (SITE / "img").mkdir(parents=True, exist_ok=True)
             (SITE / "img" / f"{slug}.jpg").write_bytes(img)
             return f"/img/{slug}.jpg"
@@ -469,6 +545,14 @@ def get_image(query, slug, fallback=""):
             print("image fail:", e)
             return ""
     return ""
+
+
+def image_for(kind, city, topic, query=""):
+    """Guides ke liye shehar ki skyline, trending ke liye AI ki query."""
+    if kind == "guide":
+        name = city.split(",")[0]
+        return f"{name} skyline", (f"{name} city", "american city skyline")
+    return (query or topic), ("news headlines",)
 
 
 # ---------------- 4. BUILD ONE POST ----------------
@@ -496,7 +580,7 @@ def build_post(cand):
         n += 1
     _SLUGS.add(slug)
     now = datetime.datetime.now(datetime.timezone.utc)
-    fallback = (cand["city"] + " skyline") if cand["kind"] == "guide" else "news headlines"
+    iq, ifb = image_for(cand["kind"], cand["city"], cand["topic"], art["image_query"])
     post = {
         "v": POST_VERSION, "kind": cand["kind"], "key": cand["key"], "slug": slug, "city": cand["city"],
         "title": art["title"], "summary": art["summary"], "intro": art["intro"], "bullets": art["bullets"],
@@ -504,7 +588,7 @@ def build_post(cand):
         "paragraphs": texts_of(art), "sources": (notes or {}).get("sources", []),
         "researched": bool(notes), "date": now.strftime("%b %d, %Y"), "iso": now.strftime("%Y-%m-%d"),
         "ts": time.time(),
-        "image": get_image(art["image_query"] or cand["topic"], slug, fallback)}
+        "image": get_image(iq, slug, ifb)}
     return "ok", post
 
 
@@ -796,8 +880,10 @@ def build_site(posts):
         write(path, page(ttl(f"{name} | {SITE_NAME}"), intro, b, path, robots="" if items else "noindex,follow"))
         if items:
             urls.append((path, items[0]["iso"]))
-    for c in CITIES:
+    for c in PLACES:
         items = [p for p in guides if p["city"] == c]
+        if not items and c not in CITIES:
+            continue
         path = f"/city/{city_slug(c)}/"
         intro = f"Guides to living in and visiting {c}."
         b = f'<h1 class="sec">{esc(c)} guides</h1><p class="meta">{intro}</p>' + (feed(items) if items else "")
@@ -849,7 +935,7 @@ def build_site(posts):
     upd = datetime.date.today().strftime("%B %d, %Y")
     static = {
         "/about/": ("About", f"<h1>About {n}</h1>"
-            f"<p>{n} publishes two kinds of content: explainers on topics that are trending in the United States, and practical guides to major US cities ({cities}).</p>"
+            f"<p>{n} publishes two kinds of content: explainers on topics that are trending in the United States, and practical guides to major US cities ({cities}) and their suburbs.</p>"
             "<p>For every article we research the topic with search tools, write an original piece in plain language with AI assistance, and list the sources we used so you can read the original reporting.</p>"
             "<p>We do not replace local newsrooms. We aim to give readers a clear, quick starting point and we encourage them to visit the sources linked in each article.</p>"),
         "/editorial/": ("Editorial Policy", "<h1>Editorial Policy</h1>"
@@ -944,7 +1030,8 @@ def main():
     filled = 0   # bina image wali posts me image bharo
     for p in posts:
         if not p.get("image") and filled < 5:
-            p["image"] = get_image(p["title"], p["slug"], "news headlines" if p["kind"] == "trend" else p["city"] + " skyline")
+            iq, ifb = image_for(p["kind"], p["city"], p["title"])
+            p["image"] = get_image(iq, p["slug"], ifb)
             filled += 1
 
     seen = {p["key"] for p in posts if p.get("key")} | set(state["skipped"])
