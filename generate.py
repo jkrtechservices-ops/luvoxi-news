@@ -721,11 +721,14 @@ def research(cand):
     """Verified facts jama karta hai. None = research available nahi."""
     if cand["kind"] == "guide":
         data, sources = research_free(cand)      # Wikipedia + Wikivoyage
+        cf, csrc = census_facts(cand["city"])    # asli Census numbers
+        money_topic = bool(re.search(r"cost of living|rent|income|afford|housing|home (?:price|value)|salary", cand["topic"], re.I))
+        if (data is None or data.get("skip")) and money_topic and len(cf) >= 5:
+            data, sources = {"skip": False, "facts": [], "questions": []}, []   # Census numbers akele kaafi hain
         if data is None:
             return None
         if data.get("skip"):
             return {"skip": True, "reason": str(data.get("reason", ""))[:100]}
-        cf, csrc = census_facts(cand["city"])    # asli Census numbers
         if csrc:
             sources = sources + [csrc]
         facts = cf + [clean(f) for f in data.get("facts", []) if str(f).strip()]
@@ -1003,13 +1006,20 @@ def build_post(cand):
 
 def produce(kind, seen, state, posts, n=0):
     if kind == "guide":
-        cand = demand_guide(seen, n) or next_guide(seen)
-        if cand:
+        had = False
+        for _ in range(3):
+            cand = demand_guide(seen, n) or next_guide(seen)
+            if not cand:
+                break
+            had = True
             status, post = build_post(cand)
+            if post:
+                return post
+            seen.add(cand["key"])
             if status == "skip":
                 state["skipped"].append(cand["key"])
-                seen.add(cand["key"])
-            return post
+        if had:
+            return None
         print("sab guides ban chuki hain, trending post banega")
     tries = 0
     for cand in trend_candidates(seen):
