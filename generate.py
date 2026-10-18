@@ -3,7 +3,7 @@
 Trending topics (Google Trends RSS) + evergreen city guides
 -> Gemini research (Google Search) -> Groq long article -> Pixabay image -> static site in ./site
 """
-import os, re, sys, json, html, hashlib, time, datetime, random, builtins
+import os, re, sys, json, html, hashlib, time, datetime, random, builtins, shutil
 import xml.etree.ElementTree as ET
 from email.utils import formatdate
 from pathlib import Path
@@ -32,24 +32,24 @@ EXTRA_PLACES = ["Plano, TX", "Frisco, TX", "Katy, TX", "The Woodlands, TX", "Rou
                 "Irvine, CA", "Fort Lauderdale, FL", "Coral Springs, FL", "Brooklyn, NY", "Arlington, TX"]
 PLACES = EXTRA_PLACES + CITIES
 MIN_WORDS = {"trend": 600, "guide": 1000}
-POST_VERSION = 5
+POST_VERSION = 6
 GROQ_GAP = 40   # free limit (8K tokens/min) ke liye do Groq calls ke beech seconds
 
 GUIDE_TEMPLATES = [
-    ("families", "Best Neighborhoods in {city} for Families"),
+    ("cost", "Cost of Living in {city}: What to Expect"),
     ("living", "Is {city} a Good Place to Live? Pros and Cons"),
-    ("free", "Best Free Things to Do in {city}"),
     ("moving", "Moving to {city}: A Practical Checklist"),
-    ("transit", "Getting Around {city}: Transit, Driving and Parking"),
     ("season", "Best Time to Visit {city}: Weather and Seasons"),
-    ("pros", "Best Neighborhoods in {city} for Young Professionals"),
-    ("weekend", "48 Hours in {city}: A Weekend Itinerary"),
+    ("free", "Best Free Things to Do in {city}"),
+    ("transit", "Getting Around {city}: Transit, Driving and Parking"),
     ("parks", "Best Parks and Outdoor Activities in {city}"),
-    ("stay", "Where to Stay in {city}: Best Areas for Visitors"),
-    ("daytrips", "Best Day Trips from {city}"),
     ("food", "{city} Food Guide: What the City Is Known For"),
     ("culture", "Best Museums and Cultural Attractions in {city}"),
-    ("cost", "Cost of Living in {city}: What to Expect"),
+    ("daytrips", "Best Day Trips from {city}"),
+    ("weekend", "48 Hours in {city}: A Weekend Itinerary"),
+    ("stay", "Where to Stay in {city}: Best Areas for Visitors"),
+    ("families", "Best Neighborhoods in {city} for Families"),
+    ("pros", "Best Neighborhoods in {city} for Young Professionals"),
 ]
 
 # Search demand ke liye seed searches (Google Autocomplete se asli searches milti hain)
@@ -87,6 +87,9 @@ SEVERE_RE = re.compile(r"\b(?:" + "|".join(SEVERE_PREFIX) + r")", re.I)
 GEMINI_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GROQ_KEYS = [k.strip() for k in os.getenv("GROQ_API_KEY", "").split(",") if k.strip()]
 PIXABAY_KEY = os.getenv("PIXABAY_API_KEY", "").strip()
+TAVILY_KEY = os.getenv("TAVILY_API_KEY", "").strip()
+CENSUS_KEY = os.getenv("CENSUS_API_KEY", "").strip()
+MISTRAL_KEY = os.getenv("MISTRAL_API_KEY", "").strip()
 ROOT = Path(__file__).parent
 SITE = ROOT / "site"
 DATA = ROOT / "data" / "posts.json"
@@ -364,17 +367,60 @@ def groq_chat(prompt, max_tokens=5000):
     raise RuntimeError(f"groq failed: {last}")
 
 
+_MQ = {"last": 0.0}
+
+
+def mistral_chat(prompt, max_tokens=5000):
+    """Mistral free tier (1 request/second). Retry on limit."""
+    last = None
+    for attempt in range(5):
+        gap = 1.3 - (time.time() - _MQ["last"])
+        if gap > 0:
+            time.sleep(gap)
+        try:
+            r = requests.post("https://api.mistral.ai/v1/chat/completions", timeout=180,
+                              headers={"Authorization": f"Bearer {MISTRAL_KEY}"},
+                              json={"model": os.getenv("MISTRAL_MODEL") or "mistral-small-latest",
+                                    "temperature": 0.5, "max_tokens": max_tokens,
+                                    "messages": [{"role": "user", "content": prompt}]})
+        except requests.RequestException as e:
+            last = e
+            time.sleep(5)
+            continue
+        _MQ["last"] = time.time()
+        if r.status_code == 429 or r.status_code >= 500:
+            last = r.text[:150]
+            time.sleep(10 * (attempt + 1))
+            continue
+        if r.status_code >= 400:
+            last = r.text[:150]
+            break
+        txt = (r.json()["choices"][0]["message"].get("content") or "").strip()
+        if txt:
+            return txt
+        last = "empty reply"
+    raise RuntimeError(f"mistral failed: {last}")
+
+
 def llm(prompt, max_tokens=5000):
-    if GROQ_KEYS:
+    """Failover chain: Groq -> Mistral -> Gemini. Jo fail ho wo is run me band."""
+    if GROQ_KEYS and not _G.get("groq_llm_off"):
         try:
             return groq_chat(prompt, max_tokens)
         except Exception as e:
             print("groq failed:", str(e)[:150])
+            _G["groq_llm_off"] = True
+    if MISTRAL_KEY and not _G.get("mistral_llm_off"):
+        try:
+            return mistral_chat(prompt, max_tokens)
+        except Exception as e:
+            print("mistral failed:", str(e)[:150])
+            _G["mistral_llm_off"] = True
     if GEMINI_KEY:
         resp = gemini({"contents": [{"parts": [{"text": prompt}]}],
                        "generationConfig": {"temperature": 0.7, "maxOutputTokens": max_tokens}})
         return text_of(resp)
-    raise RuntimeError("koi AI key nahi mili (GROQ_API_KEY / GEMINI_API_KEY)")
+    raise RuntimeError("koi AI key kaam nahi kar rahi (GROQ / MISTRAL / GEMINI)")
 
 
 def research_gemini(prompt):
@@ -548,32 +594,150 @@ SOURCE MATERIAL:{material if cand['kind'] == 'guide' else chr(10) + material}"""
     return data, sources
 
 
-def research(cand):
-    """Verified facts jama karta hai. None = research available nahi."""
-    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 1 and time.time() > _G.get("gem_off", 0)
-    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 1 and time.time() > _G.get("groq_off", 0)
-    if cand["kind"] == "guide":
-        what = f'a practical guide that answers the search "{cand["topic"]}" (place: {cand["city"]})'
-        skip = "Set skip to true only if you cannot find reliable sources."
-    else:
-        what = f'the trending US topic "{cand["topic"]}" (why people are searching for it right now)'
-        skip = ("Set skip to true if the topic involves a death, crime, accident, missing person, minor, "
-                "health claim, politics or elections, or if you cannot find reliable sources.")
-    hints = ("Related headlines:\n" + cand["hints"] + "\n") if cand["hints"] else ""
-    prompt = f"""You are a research assistant for a US news and guide website.
-Use web search to research {what}. Report verified facts only.
-{hints}
-{skip}
+# ---------------- TAVILY (trending research) ----------------
+def tavily_search(query, n=5):
+    if not TAVILY_KEY:
+        return []
+    try:
+        r = requests.post("https://api.tavily.com/search", timeout=60,
+                          headers={"Authorization": f"Bearer {TAVILY_KEY}"},
+                          json={"query": query, "topic": "news", "days": 7, "max_results": n,
+                                "search_depth": "basic", "include_answer": False,
+                                "include_raw_content": True})
+        r.raise_for_status()
+        return r.json().get("results", [])
+    except Exception as e:
+        print("tavily fail:", str(e)[:120])
+        return []
+
+
+def research_tavily(cand):
+    """Asli web sources se facts. Return (data, sources) ya (None, [])."""
+    res = tavily_search(cand["topic"])
+    rows, sources, domains = [], [], set()
+    for x in res:
+        url = x.get("url") or ""
+        body = max((x.get("raw_content") or "", x.get("content") or ""), key=len)[:1400].strip()
+        if not url or len(body) < 120:
+            continue
+        dom = url.split("/")[2].replace("www.", "") if url.count("/") >= 2 else url
+        domains.add(dom)
+        rows.append(f"[{len(rows) + 1}] {x.get('title', '')} ({dom}, {x.get('published_date') or 'date n/a'})\n{body}")
+        sources.append({"title": dom, "url": url})
+    if len(rows) < 3 or len(domains) < 2:
+        print("tavily: too few sources for", cand["topic"][:50])
+        return {"skip": True, "reason": "too few independent sources"}, []
+    prompt = f"""You are a research assistant for a US news and guide website. Today is {datetime.date.today().strftime('%B %d, %Y')}.
+From the SOURCES below, extract facts for an article about "{cand['topic']}".
+Use ONLY information found in the sources. Each fact is one standalone sentence with names, places and dates exactly as written in the sources.
+If sources disagree about a date, time, score or number, leave that fact out. Do not do date or weekday arithmetic.
+Set skip to true if the topic involves a death, crime, accident, missing person, minor, health claim, politics or elections, or if the sources are too thin or contradictory.
 
 Return ONLY one JSON object (no markdown) like:
-{{"skip": false, "reason": "", "facts": ["14-18 short standalone facts, one sentence each, with concrete names, places and dates where sources support them"], "questions": ["5 questions readers commonly ask about this"]}}"""
-    data, sources = None, []
-    if gemini_ok:
-        data, sources = research_gemini(prompt)
-    if data is None and groq_ok:
-        data, sources = research_groq(prompt)
-    if data is None:
-        data, sources = research_free(cand)
+{{"skip": false, "reason": "", "facts": ["up to 16 facts"], "questions": ["5 questions readers commonly ask"]}}
+
+SOURCES:
+""" + "\n\n".join(rows)
+    try:
+        data = parse_json(llm(prompt, 1800))
+    except Exception as e:
+        print("tavily extract failed:", str(e)[:120])
+        return None, []
+    print("research via tavily:", len(rows), "sources")
+    return data, sources
+
+
+# ---------------- CENSUS (guides ke asli numbers) ----------------
+CITY_STATE = {"New York": "NY", "Los Angeles": "CA", "Chicago": "IL", "Houston": "TX", "Phoenix": "AZ",
+              "Philadelphia": "PA", "San Antonio": "TX", "Dallas": "TX", "Austin": "TX", "Miami": "FL"}
+STATE_FIPS = {"TX": "48", "AZ": "04", "IL": "17", "NJ": "34", "CA": "06", "FL": "12", "NY": "36", "PA": "42"}
+CENSUS_VARS = "NAME,B01003_001E,B19013_001E,B25064_001E,B25077_001E,B01002_001E,B25003_001E,B25003_002E"
+_CEN = {}
+
+
+def _cn(v):
+    try:
+        n = float(v)
+        return n if n >= 0 else None   # Census negative codes = data nahi
+    except (TypeError, ValueError):
+        return None
+
+
+def census_facts(place):
+    """US Census ACS 5-year se numbers. Return (facts, source) ya ([], None)."""
+    if not CENSUS_KEY:
+        return [], None
+    name = place.split(",")[0].strip()
+    st = place.split(",")[1].strip() if "," in place else CITY_STATE.get(name)
+    fips = STATE_FIPS.get(st)
+    if not fips:
+        return [], None
+    for yr in (2024, 2023):
+        if (yr, fips) not in _CEN:
+            try:
+                r = requests.get(f"https://api.census.gov/data/{yr}/acs/acs5", timeout=60,
+                                 params={"get": CENSUS_VARS, "for": "place:*", "in": f"state:{fips}", "key": CENSUS_KEY})
+                _CEN[(yr, fips)] = r.json() if r.status_code == 200 else None
+            except Exception as e:
+                print("census fail:", yr, str(e)[:80])
+                _CEN[(yr, fips)] = None
+        rows = _CEN[(yr, fips)]
+        if not rows or len(rows) < 2:
+            continue
+        head = rows[0]
+        match = None
+        for kind in (" city,", " town,", " CDP,", " municipality,"):
+            match = next((r for r in rows[1:] if r[0].startswith(name + kind)), None)
+            if match:
+                break
+        if not match:
+            return [], None
+        d = dict(zip(head, match))
+        pop, inc, rent = _cn(d.get("B01003_001E")), _cn(d.get("B19013_001E")), _cn(d.get("B25064_001E"))
+        home, age = _cn(d.get("B25077_001E")), _cn(d.get("B01002_001E"))
+        tot, own = _cn(d.get("B25003_001E")), _cn(d.get("B25003_002E"))
+        lab = f"the U.S. Census Bureau's {yr - 4}-{yr} American Community Survey (ACS) 5-year estimates"
+        f = []
+        if pop:
+            f.append(f"{name} had an estimated population of {int(pop):,} in {lab}.")
+        if inc:
+            f.append(f"The median household income in {name} is ${int(inc):,} per year, per {lab}.")
+        if rent:
+            f.append(f"The median gross rent in {name} is ${int(rent):,} per month, per {lab}.")
+        if home:
+            f.append(f"The median value of owner-occupied homes in {name} is ${int(home):,}, per {lab}.")
+        if age:
+            f.append(f"The median age of {name} residents is {age:g} years, per {lab}.")
+        if tot and own:
+            f.append(f"About {round(own * 100 / tot)}% of occupied housing units in {name} are owner-occupied, per {lab}.")
+        if f:
+            print("census facts:", len(f), name, yr)
+            return f, {"title": f"U.S. Census Bureau ACS {yr - 4}-{yr}", "url": "https://www.census.gov/programs-surveys/acs"}
+        return [], None
+    return [], None
+
+
+def research(cand):
+    """Verified facts jama karta hai. None = research available nahi."""
+    if cand["kind"] == "guide":
+        data, sources = research_free(cand)      # Wikipedia + Wikivoyage
+        if data is None:
+            return None
+        if data.get("skip"):
+            return {"skip": True, "reason": str(data.get("reason", ""))[:100]}
+        cf, csrc = census_facts(cand["city"])    # asli Census numbers
+        if csrc:
+            sources = sources + [csrc]
+        facts = cf + [clean(f) for f in data.get("facts", []) if str(f).strip()]
+        if len(facts) < 5:
+            return {"skip": True, "reason": "too few facts"}
+        return {"skip": False, "facts": facts[:20], "questions": [clean(q) for q in data.get("questions", [])][:6],
+                "sources": sources[:5]}
+    # trending
+    if TAVILY_KEY:
+        data, sources = research_tavily(cand)
+    else:
+        data, sources = None, []   # Tavily key nahi: trending nahi likhenge (galat news se behtar)
     if data is None:
         return None
     if data.get("skip"):
@@ -597,7 +761,7 @@ SCHEMA = """{
 }"""
 
 
-def writer_prompt(cand, notes):
+def writer_prompt(cand, notes, feedback=""):
     if cand["kind"] == "guide":
         goal = f'a helpful, practical guide for people who search Google for "{cand["topic"]}" (place: {cand["city"]}); the title must include this keyword naturally'
         length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
@@ -618,6 +782,7 @@ def writer_prompt(cand, notes):
         extra = (f"\n- Today is {datetime.date.today().strftime('%B %d, %Y')}. Make the article stay accurate for weeks: "
                  "never use the words today, tonight, tomorrow, live or now in the title, and say 'as of <month year>' "
                  "where facts may change.")
+    fix = (f"\n- YOUR PREVIOUS DRAFT WAS REJECTED. Fix these problems: {feedback}" if feedback else "")
     return f"""You are an experienced US journalist and SEO editor. Write {goal}.
 
 {research_txt}
@@ -630,7 +795,9 @@ RULES:
 - Do not copy sentences from any source. No quotes longer than 5 words.
 - No filler openers ("In today's fast-paced world") and avoid the words delve, tapestry, bustling, vibrant.
 - Each section answers a different question; headings are specific (never "Introduction").
-- Plain text only: no markdown, no asterisks, no hashtags.{extra}
+- Copy every number, price, percentage and date exactly as written in the notes. If you are not sure of a number, leave it out. Never round or estimate.
+- Never write a weekday together with a date unless the notes do. Never mention what the notes lack or do not say.
+- Plain text only: no markdown, no asterisks, no hashtags.{extra}{fix}
 - Length: {length}.
 
 Return ONLY one JSON object, no code fences, shaped like:
@@ -659,11 +826,11 @@ def normalize(d):
             "image_query": clean(d.get("image_query", ""))}
 
 
-def write_long(cand, notes):
+def write_long(cand, notes, feedback=""):
     art = None
     for attempt in range(2):
         try:
-            art = normalize(parse_json(llm(writer_prompt(cand, notes))))
+            art = normalize(parse_json(llm(writer_prompt(cand, notes, feedback))))
             if art["title"] and len(art["sections"]) >= 4 and art["intro"]:
                 break
         except Exception as e:
@@ -729,6 +896,63 @@ def image_for(kind, city, topic, query=""):
     return (query or topic), ("news headlines",)
 
 
+# ---------------- VERIFY (publish se pehle auto-check) ----------------
+_MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September",
+           "October", "November", "December"]
+_DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+DATE_RE = re.compile(r"\b(" + "|".join(_DAYS) + r"),?\s+(" + "|".join(_MONTHS) + r")\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s+(\d{4}))?")
+FILLER_RE = re.compile(r"\b(not provided|(?:not|isn't|aren't) (?:available|specified|mentioned|included) in the|"
+                       r"research notes?|source material|the notes|no (?:specific )?(?:data|details|information) (?:is|was|are|were) (?:provided|available))\b", re.I)
+NUM_RE = re.compile(r"\$?\d[\d,]*(?:\.\d+)?%?")
+
+
+def date_problems(text):
+    today = datetime.date.today()
+    out = []
+    for m in DATE_RE.finditer(text):
+        wd, mon, day, yr = m.groups()
+        mi = _MONTHS.index(mon) + 1
+        year = int(yr) if yr else (today.year + 1 if mi < today.month - 2 else today.year)
+        try:
+            real = _DAYS[datetime.date(year, mi, int(day)).weekday()]
+        except ValueError:
+            out.append(m.group(0))
+            continue
+        if real != wd:
+            out.append(f"{m.group(0)} (that date is a {real})")
+    return out
+
+
+def number_problems(text, facts_text):
+    norm = facts_text.replace(",", "")
+    bad = []
+    for m in NUM_RE.finditer(text):
+        tok = m.group(0)
+        core = tok.strip("$%").rstrip(",.").replace(",", "")
+        if not core or re.fullmatch(r"(19|20)\d\d", core):
+            continue
+        sym = tok.startswith("$") or tok.endswith("%")
+        if len(core.replace(".", "")) < 3 and not sym and "." not in core:
+            continue
+        if core not in norm:
+            bad.append(tok)
+    return sorted(set(bad))
+
+
+def verify(art, notes, cand):
+    """Problems ki list. Khali list = post publish ho sakti hai."""
+    text = art["title"] + " " + " ".join(texts_of(art))
+    probs = [f"filler phrase '{m.group(0)}'" for m in FILLER_RE.finditer(text)][:2]
+    probs += [f"wrong weekday/date: {p}" for p in date_problems(text)][:3]
+    facts = " ".join(notes["facts"]) + " " + " ".join(notes.get("questions", []))
+    bad = number_problems(text, facts)
+    if len(bad) > (0 if cand["kind"] == "trend" else 1):
+        probs.append("numbers that are not in the notes: " + ", ".join(bad[:8]))
+    if cand["kind"] == "trend" and len(notes.get("sources", [])) < 2:
+        probs.append("fewer than 2 sources")
+    return probs
+
+
 # ---------------- 4. BUILD ONE POST ----------------
 _SLUGS = set()
 
@@ -736,14 +960,25 @@ _SLUGS = set()
 def build_post(cand):
     """Return (status, post). status: ok / skip / fail / stop"""
     notes = research(cand)
-    if notes is None and cand["kind"] == "trend":
-        return "stop", None  # bina research ke trending post nahi likhenge
+    if notes is None:
+        return "stop", None  # bina research ke koi post nahi likhenge
     if notes and notes.get("skip"):
         print("skip:", cand["topic"][:60], "-", notes.get("reason", ""))
         return "skip", None
-    art = write_long(cand, notes)
+    art, feedback = None, ""
+    for attempt in range(2):
+        art = write_long(cand, notes, feedback)
+        if not art:
+            return "fail", None
+        probs = verify(art, notes, cand)
+        if not probs:
+            break
+        print("verify failed:", "; ".join(probs)[:250])
+        feedback = "; ".join(probs)
+        art = None
     if not art:
-        return "fail", None
+        print("skip (failed verification):", cand["topic"][:60])
+        return "skip", None
     if is_severe(" ".join(texts_of(art))):
         print("skip (sensitive text):", art["title"])
         return "skip", None
@@ -1025,6 +1260,12 @@ def build_site(posts):
     (SITE / "style.css").write_text(CSS, encoding="utf-8")
     posts = sorted(posts, key=lambda p: p["ts"], reverse=True)
     LATEST = posts
+    keep = {p["slug"] for p in posts}
+    nd = SITE / "news"
+    if nd.exists():
+        for d in nd.iterdir():
+            if d.is_dir() and d.name not in keep:
+                shutil.rmtree(d)
     today = datetime.date.today().isoformat()
     urls = [("/", today)] + [(u, today) for u in ("/about/", "/editorial/", "/contact/", "/privacy/", "/disclaimer/")]
     trends = [p for p in posts if p["kind"] == "trend"]
@@ -1244,7 +1485,7 @@ def main():
     state["n"] = n + len(plan)
 
     new_urls = []
-    if GEMINI_KEY or GROQ_KEYS:
+    if GEMINI_KEY or GROQ_KEYS or MISTRAL_KEY:
         for i, kind in enumerate(plan):
             try:
                 post = produce(kind, seen, state, posts, n + i)
