@@ -3,7 +3,7 @@
 Trending topics (Google Trends RSS) + evergreen city guides
 -> Gemini research (Google Search) -> Groq long article -> Pixabay image -> static site in ./site
 """
-import os, re, sys, json, html, hashlib, time, datetime, random, builtins, shutil
+import os, re, sys, json, html, hashlib, time, datetime, random, builtins, shutil, itertools
 import xml.etree.ElementTree as ET
 from email.utils import formatdate
 from pathlib import Path
@@ -59,6 +59,8 @@ SEEDS = ["moving to {n}", "living in {n}", "{n} neighborhoods", "best neighborho
 GUIDE_BLOCK = re.compile(r"\b(crime|safe|safest|unsafe|dangerous|worst|ghetto|gang|lawyer|attorney|dui|tax|taxes|"
                          r"covid|jobs?|hiring|salary|for rent|for sale|zillow|craigslist|news|today|tonight|"
                          r"tomorrow|this weekend|near me|open now|hours|phone number|address)\b", re.I)
+# Guides sirf wahi topics jinke liye Wikipedia/Census me asli data milta hai
+DATA_TOPIC = re.compile(r"cost of living|living in|moving to|good place to live|neighborhoods?|suburbs|rent|income|population|housing|home prices?", re.I)
 UTILITY_RE = re.compile(r"\b(release date|how to watch|where to watch|live stream|streaming|stream|channel|schedule|"
                         r"what time|start time|game time|kickoff|tickets?|price|cast|trailer|rules|explained|meaning|"
                         r"what is|how does|when does|when is)\b", re.I)
@@ -211,7 +213,7 @@ def demand_guide(seen, n):
             for s in suggest(seed.format(n=name)):
                 if name.lower() not in s.lower() or len(s.split()) < 3:
                     continue
-                if is_blocked(s) or GUIDE_BLOCK.search(s):
+                if is_blocked(s) or GUIDE_BLOCK.search(s) or not DATA_TOPIC.search(s):
                     continue
                 key = "guide:" + normkey(s)
                 if key in seen:
@@ -631,7 +633,7 @@ def research_tavily(cand):
 From the SOURCES below, extract facts for an article about "{cand['topic']}".
 Use ONLY information found in the sources. Each fact is one standalone sentence with names, places and dates exactly as written in the sources.
 If sources disagree about a date, time, score or number, leave that fact out. Do not do date or weekday arithmetic.
-Set skip to true if the topic involves a death, crime, accident, missing person, minor, health claim, politics or elections, or if the sources are too thin or contradictory.
+Set skip to true if the topic involves a death, crime, accident, missing person, minor, health claim, politics or elections, or if the sources are too thin or contradictory. Also set skip to true if the topic is mainly about a place, team, league or event outside the United States (for example a tournament held abroad or a foreign domestic league), unless it is a global event with a clear US angle such as a US broadcast, US ticket sale or US team or athlete.
 
 Return ONLY one JSON object (no markdown) like:
 {{"skip": false, "reason": "", "facts": ["up to 16 facts"], "questions": ["5 questions readers commonly ask"]}}
@@ -717,8 +719,109 @@ def census_facts(place):
     return [], None
 
 
+# ---------------- X vs Y COMPARISON GUIDES (Census data) ----------------
+def place_state(place):
+    if "," in place:
+        return place.split(",")[1].strip()
+    return CITY_STATE.get(place.strip())
+
+
+def census_data(place):
+    """Raw Census numbers: ({pop, inc, rent, home, age, tot, own}, year) ya (None, 0)."""
+    if not CENSUS_KEY:
+        return None, 0
+    name = place.split(",")[0].strip()
+    fips = STATE_FIPS.get(place_state(place))
+    if not fips:
+        return None, 0
+    for yr in (2024, 2023):
+        if (yr, fips) not in _CEN:
+            try:
+                r = requests.get(f"https://api.census.gov/data/{yr}/acs/acs5", timeout=60,
+                                 params={"get": CENSUS_VARS, "for": "place:*", "in": f"state:{fips}", "key": CENSUS_KEY})
+                _CEN[(yr, fips)] = r.json() if r.status_code == 200 else None
+            except Exception as e:
+                print("census fail:", yr, str(e)[:80])
+                _CEN[(yr, fips)] = None
+        rows = _CEN[(yr, fips)]
+        if not rows or len(rows) < 2:
+            continue
+        match = None
+        for kind in (" city,", " town,", " CDP,", " municipality,"):
+            match = next((r for r in rows[1:] if r[0].startswith(name + kind)), None)
+            if match:
+                break
+        if not match:
+            return None, 0
+        d = dict(zip(rows[0], match))
+        out = {"pop": _cn(d.get("B01003_001E")), "inc": _cn(d.get("B19013_001E")), "rent": _cn(d.get("B25064_001E")),
+               "home": _cn(d.get("B25077_001E")), "age": _cn(d.get("B01002_001E")),
+               "tot": _cn(d.get("B25003_001E")), "own": _cn(d.get("B25003_002E"))}
+        return out, yr
+    return None, 0
+
+
+def compare_candidate(seen):
+    """Agli unseen 'A vs B' jodi: pehle ek hi state ke shehar, phir baaki."""
+    names = [p for p in PLACES if p != "Brooklyn, NY" and place_state(p) in STATE_FIPS]
+    pairs = list(itertools.combinations(names, 2))
+    pairs.sort(key=lambda ab: place_state(ab[0]) != place_state(ab[1]))
+    for a, b in pairs:
+        key = f"guide:compare:{a}|{b}"
+        if key in seen:
+            continue
+        na, nb = a.split(",")[0], b.split(",")[0]
+        return {"kind": "guide", "key": key, "city": a, "topic": f"{na} vs {nb}", "hints": "", "compare": (a, b)}
+    return None
+
+
+def _pct(hi, lo):
+    return round((hi - lo) * 100 / lo) if lo else 0
+
+
+def research_compare(cand):
+    a, b = cand["compare"]
+    na, nb = a.split(",")[0], b.split(",")[0]
+    da, ya = census_data(a)
+    db, yb = census_data(b)
+    if not da or not db:
+        return {"skip": True, "reason": "no census data for this pair"}
+    fa, sa = census_facts(a)
+    fb, sb = census_facts(b)
+    facts = fa + fb
+    lab = f"U.S. Census Bureau ACS {ya - 4}-{ya} 5-year estimates"
+    for key, label, fmt in (("pop", "population", "{:,}"), ("inc", "median household income", "${:,}"),
+                            ("rent", "median gross rent per month", "${:,}"),
+                            ("home", "median value of owner-occupied homes", "${:,}")):
+        va, vb = da.get(key), db.get(key)
+        if not va or not vb or va == vb:
+            continue
+        (hn, hv), (ln, lv) = ((na, va), (nb, vb)) if va > vb else ((nb, vb), (na, va))
+        diff = int(hv) - int(lv)
+        facts.append(f"The {label} is {fmt.format(int(va))} in {na} and {fmt.format(int(vb))} in {nb}: "
+                     f"{hn} is {fmt.format(diff)} (about {_pct(hv, lv)}%) higher than {ln}, per the {lab}.")
+    for n, d in ((na, da), (nb, db)):
+        if d.get("rent") and d.get("inc"):
+            facts.append(f"Median rent in {n} equals about {round(d['rent'] * 12 * 100 / d['inc'])}% of the median household income, "
+                         f"calculated from the {lab}.")
+    sources = [x for x in (sa,) if x]
+    for place in (a, b):
+        data, srcs = research_free({"kind": "guide", "city": place, "topic": f"Living in {place.split(',')[0]}", "hints": ""})
+        if data and not data.get("skip"):
+            facts += [clean(f) for f in data.get("facts", []) if str(f).strip()][:10]
+            sources += srcs
+    if len(facts) < 10:
+        return {"skip": True, "reason": "too few facts for comparison"}
+    qs = [f"Is {na} or {nb} cheaper to live in?", f"Which has higher incomes, {na} or {nb}?",
+          f"Is rent higher in {na} or {nb}?", f"Which is better for families, {na} or {nb}?",
+          f"Is {na} or {nb} bigger?"]
+    return {"skip": False, "facts": facts[:42], "questions": qs, "sources": sources[:5]}
+
+
 def research(cand):
     """Verified facts jama karta hai. None = research available nahi."""
+    if cand.get("compare"):
+        return research_compare(cand)
     if cand["kind"] == "guide":
         data, sources = research_free(cand)      # Wikipedia + Wikivoyage
         cf, csrc = census_facts(cand["city"])    # asli Census numbers
@@ -765,7 +868,13 @@ SCHEMA = """{
 
 
 def writer_prompt(cand, notes, feedback=""):
-    if cand["kind"] == "guide":
+    if cand.get("compare"):
+        na, nb = [x.split(",")[0] for x in cand["compare"]]
+        goal = (f'a helpful, practical comparison "{na} vs {nb}" for people deciding where to live or move; the title must include "{na} vs {nb}". '
+                f'Cover, using only the notes: size and population, incomes, rent, home values and ownership, how affordable each city is, '
+                f'what each city is known for, and who each city suits best. End with a clear summary of the main differences')
+        length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
+    elif cand["kind"] == "guide":
         goal = f'a helpful, practical guide for people who search Google for "{cand["topic"]}" (place: {cand["city"]}); the title must include this keyword naturally'
         length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
     else:
@@ -881,7 +990,11 @@ def get_image(query, slug, fallbacks=()):
             if not hits:
                 continue
             pick = int(hashlib.md5(slug.encode()).hexdigest(), 16) % len(hits)   # har post ki alag photo
-            img = requests.get(hits[pick]["webformatURL"], timeout=30).content
+            ir = requests.get(hits[pick]["webformatURL"], headers=UA, timeout=30)
+            img = ir.content
+            if ir.status_code != 200 or len(img) < 5000 or img[:3] != b"\xff\xd8\xff":
+                print("pixabay image invalid:", ir.status_code, len(img))
+                continue
             (SITE / "img").mkdir(parents=True, exist_ok=True)
             (SITE / "img" / f"{slug}.jpg").write_bytes(img)
             return f"/img/{slug}.jpg"
@@ -889,6 +1002,17 @@ def get_image(query, slug, fallbacks=()):
             print("image fail:", e)
             return ""
     return ""
+
+
+def img_ok(p):
+    """Image file sach me valid JPEG hai?"""
+    if not p.get("image"):
+        return False
+    f = SITE / p["image"].lstrip("/")
+    try:
+        return f.stat().st_size > 5000 and f.read_bytes()[:3] == b"\xff\xd8\xff"
+    except OSError:
+        return False
 
 
 def image_for(kind, city, topic, query=""):
@@ -1008,7 +1132,7 @@ def produce(kind, seen, state, posts, n=0):
     if kind == "guide":
         had = False
         for _ in range(3):
-            cand = demand_guide(seen, n) or next_guide(seen)
+            cand = (compare_candidate(seen) if n % 2 == 1 else None) or demand_guide(seen, n) or next_guide(seen)
             if not cand:
                 break
             had = True
@@ -1477,7 +1601,7 @@ def main():
 
     filled = 0   # bina image wali posts me image bharo
     for p in posts:
-        if not p.get("image") and filled < 5:
+        if not img_ok(p) and filled < 5:
             iq, ifb = image_for(p["kind"], p["city"], p["title"])
             p["image"] = get_image(iq, p["slug"], ifb)
             filled += 1
@@ -1491,7 +1615,7 @@ def main():
     if t_env or g_env:   # manual run
         plan = ["trend"] * int(t_env or 0) + ["guide"] * int(g_env or 0)
     else:                # auto: har 3rd run me trending, baaki guides
-        plan = ["trend" if n % 3 == 2 else "guide"]
+        plan = ["trend" if n % 6 == 5 else "guide"]
     state["n"] = n + len(plan)
 
     new_urls = []
