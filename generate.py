@@ -31,25 +31,16 @@ EXTRA_PLACES = ["Plano, TX", "Frisco, TX", "Katy, TX", "The Woodlands, TX", "Rou
                 "Naperville, IL", "Evanston, IL", "Jersey City, NJ", "Hoboken, NJ", "Pasadena, CA",
                 "Irvine, CA", "Fort Lauderdale, FL", "Coral Springs, FL", "Brooklyn, NY", "Arlington, TX"]
 PLACES = EXTRA_PLACES + CITIES
-MIN_WORDS = {"trend": 600, "guide": 1000}
+MIN_WORDS = {"trend": 600, "guide": 800}
 POST_VERSION = 6
 GROQ_GAP = 40   # free limit (8K tokens/min) ke liye do Groq calls ke beech seconds
 
 GUIDE_TEMPLATES = [
     ("cost", "Cost of Living in {city}: What to Expect"),
+    ("rent", "Average Rent in {city}: What Renters Pay"),
+    ("income", "Median Income in {city}: How Much Do Residents Earn?"),
     ("living", "Is {city} a Good Place to Live? Pros and Cons"),
-    ("moving", "Moving to {city}: A Practical Checklist"),
-    ("season", "Best Time to Visit {city}: Weather and Seasons"),
-    ("free", "Best Free Things to Do in {city}"),
-    ("transit", "Getting Around {city}: Transit, Driving and Parking"),
-    ("parks", "Best Parks and Outdoor Activities in {city}"),
-    ("food", "{city} Food Guide: What the City Is Known For"),
-    ("culture", "Best Museums and Cultural Attractions in {city}"),
-    ("daytrips", "Best Day Trips from {city}"),
-    ("weekend", "48 Hours in {city}: A Weekend Itinerary"),
-    ("stay", "Where to Stay in {city}: Best Areas for Visitors"),
-    ("families", "Best Neighborhoods in {city} for Families"),
-    ("pros", "Best Neighborhoods in {city} for Young Professionals"),
+    ("pop", "Population of {city}: Size, Age and Housing"),
 ]
 
 # Search demand ke liye seed searches (Google Autocomplete se asli searches milti hain)
@@ -825,7 +816,7 @@ def research(cand):
     if cand["kind"] == "guide":
         data, sources = research_free(cand)      # Wikipedia + Wikivoyage
         cf, csrc = census_facts(cand["city"])    # asli Census numbers
-        money_topic = bool(re.search(r"cost of living|rent|income|afford|housing|home (?:price|value)|salary", cand["topic"], re.I))
+        money_topic = bool(re.search(r"cost of living|rent|income|afford|housing|home (?:price|value)|salary|population|median", cand["topic"], re.I))
         if (data is None or data.get("skip")) and money_topic and len(cf) >= 5:
             data, sources = {"skip": False, "facts": [], "questions": []}, []   # Census numbers akele kaafi hain
         if data is None:
@@ -876,7 +867,7 @@ def writer_prompt(cand, notes, feedback=""):
         length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
     elif cand["kind"] == "guide":
         goal = f'a helpful, practical guide for people who search Google for "{cand["topic"]}" (place: {cand["city"]}); the title must include this keyword naturally'
-        length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
+        length = "900-1,200 words in total: 5-6 sections of 140-200 words each, plus 4 FAQ answers. Do not pad: if the notes are short, write fewer words"
     else:
         goal = f'a practical explainer for people who search Google for "{cand["topic"]}" (a topic trending in the US right now); the title must include this keyword naturally'
         length = "800-1,100 words in total: 5 sections of 130-190 words each, plus 4 FAQ answers"
@@ -1132,7 +1123,7 @@ def produce(kind, seen, state, posts, n=0):
     if kind == "guide":
         had = False
         for _ in range(3):
-            cand = (compare_candidate(seen) if n % 2 == 1 else None) or demand_guide(seen, n) or next_guide(seen)
+            cand = (compare_candidate(seen) if n % 2 == 1 else None) or next_guide(seen)
             if not cand:
                 break
             had = True
