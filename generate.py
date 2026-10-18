@@ -1010,6 +1010,8 @@ def image_for(kind, city, topic, query=""):
     """Guides ke liye shehar ki skyline, trending ke liye AI ki query."""
     if kind == "guide":
         name = city.split(",")[0]
+        if city not in CITIES:   # chhote shehar/suburb: Pixabay me unki photo nahi hoti, generic suburb photo
+            return "american suburban neighborhood houses", ("suburban houses", "residential street")
         return f"{name} skyline", (f"{name} city", "american city skyline")
     return (query or topic), ("news headlines",)
 
@@ -1115,7 +1117,7 @@ def build_post(cand):
         "paragraphs": texts_of(art), "sources": (notes or {}).get("sources", []),
         "researched": bool(notes), "date": now.strftime("%b %d, %Y"), "iso": now.strftime("%Y-%m-%d"),
         "ts": time.time(),
-        "image": get_image(iq, slug, ifb)}
+        "image": get_image(iq, slug, ifb), "img_v": 2}
     return "ok", post
 
 
@@ -1592,9 +1594,13 @@ def main():
 
     filled = 0   # bina image wali posts me image bharo
     for p in posts:
-        if not img_ok(p) and filled < 5:
+        stale = p["kind"] == "guide" and p["city"] not in CITIES and p.get("img_v") != 2
+        if (not img_ok(p) or stale) and filled < 5:
             iq, ifb = image_for(p["kind"], p["city"], p["title"])
-            p["image"] = get_image(iq, p["slug"], ifb)
+            new_img = get_image(iq, p["slug"], ifb)
+            if new_img or not img_ok(p):
+                p["image"] = new_img
+            p["img_v"] = 2
             filled += 1
 
     seen = {p["key"] for p in posts if p.get("key")} | set(state["skipped"])
