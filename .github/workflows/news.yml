@@ -2,7 +2,7 @@ name: Publish news
 
 on:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 */6 * * *"
   push:
     paths:
       - "run-now.txt"
@@ -12,7 +12,7 @@ on:
         description: "Trending posts"
         default: "1"
       guide:
-        description: "City guide posts"
+        description: "Guide posts"
         default: "1"
 
 permissions:
@@ -25,7 +25,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -41,17 +41,18 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
-          TREND_PER_RUN: ${{ github.event.inputs.trend || (github.event_name == 'push' && '2' || '1') }}
-          GUIDE_PER_RUN: ${{ github.event.inputs.guide || (github.event_name == 'push' && '2' || '1') }}
+          TREND_PER_RUN: ${{ github.event.inputs.trend || (github.event_name == 'push' && '1' || '') }}
+          GUIDE_PER_RUN: ${{ github.event.inputs.guide || (github.event_name == 'push' && '1' || '') }}
 
       - name: Commit changes
+        if: always()
         run: |
           git config user.name "news-bot"
           git config user.email "bot@users.noreply.github.com"
           git add -A
-          git diff --cached --quiet || (git commit -m "auto: new posts" && git pull --rebase && git push)
+          git diff --cached --quiet || (git commit -m "auto: update" && git pull --rebase && git push)
 
       - name: Ping IndexNow (Bing and others)
+        if: always()
         run: |
-          sleep 150
-          python generate.py --ping
+          if grep -q "http" data/new_urls.json; then sleep 150; python generate.py --ping; fi
