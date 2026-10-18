@@ -62,6 +62,7 @@ GUIDE_BLOCK = re.compile(r"\b(crime|safe|safest|unsafe|dangerous|worst|ghetto|ga
 UTILITY_RE = re.compile(r"\b(release date|how to watch|where to watch|live stream|streaming|stream|channel|schedule|"
                         r"what time|start time|game time|kickoff|tickets?|price|cast|trailer|rules|explained|meaning|"
                         r"what is|how does|when does|when is)\b", re.I)
+TIME_RE = re.compile(r"\b(today|tonight|tomorrow|yesterday|live|now)\b", re.I)
 STOP_WORDS = {"the", "a", "an", "to", "of", "in", "for", "from", "and", "is", "are", "what", "best", "tx",
               "texas", "az", "arizona", "il", "illinois", "nj", "jersey", "ca", "california", "fl", "florida", "ny"}
 
@@ -73,7 +74,9 @@ BLOCK_PREFIX = ["kill", "shoot", "shot", "murder", "dead", "death", "died", "die
                 "injur", "hospital", "trump", "biden", "harris", "election", "senate", "congress",
                 "democrat", "republican", "israel", "gaza", "ukraine", "russia", "shutdown",
                 "impeach", "immigra", "abortion", "covid", "vaccine", "cancer", "diagnos",
-                "hurricane", "tornado", "earthquake", "flood", "evacuat", "wildfire"]
+                "hurricane", "tornado", "earthquake", "flood", "evacuat", "wildfire",
+                "wedding", "engage", "pregnan", "divorc", "dating", "breakup", "rumor", "affair",
+                "boyfriend", "girlfriend", "married"]
 BLOCK_EXACT = ["war", "fire", "vote", "gun", "guns"]
 SEVERE_PREFIX = ["murder", "rape", "suicide", "gunman", "overdose", "killed", "shooting", "stabb"]
 # ==========================================
@@ -228,7 +231,8 @@ def trend_candidates(seen):
             continue
         checked += 1
         for q in (c["title"], c["title"] + " when", c["title"] + " how to"):
-            hit = next((x for x in suggest(q) if UTILITY_RE.search(x) and similar(x, c["title"])), None)
+            hit = next((x for x in suggest(q) if UTILITY_RE.search(x) and not TIME_RE.search(x)
+                        and similar(x, c["title"])), None)
             if hit:
                 key = "trend:" + normkey(hit)
                 if key not in seen:
@@ -388,7 +392,7 @@ def research_gemini(prompt):
             print("research via gemini:", m)
             return data, sources
         except Exception as e:
-            print("gemini research", m, "failed:", str(e)[:110])
+            print("gemini search unavailable:", m, str(e)[:60])
     _G["gfails"] += 1
     return None, []
 
@@ -422,7 +426,7 @@ def research_groq(prompt):
                 return data, sources
             except Exception as e:
                 last = e
-    print("groq research failed:", str(last)[:120])
+    print("groq search unavailable:", str(last)[:90])
     _G["qfails"] += 1
     return None, []
 
@@ -546,8 +550,8 @@ SOURCE MATERIAL:{material if cand['kind'] == 'guide' else chr(10) + material}"""
 
 def research(cand):
     """Verified facts jama karta hai. None = research available nahi."""
-    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 1
-    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 1
+    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 1 and time.time() > _G.get("gem_off", 0)
+    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 1 and time.time() > _G.get("groq_off", 0)
     if cand["kind"] == "guide":
         what = f'a practical guide that answers the search "{cand["topic"]}" (place: {cand["city"]})'
         skip = "Set skip to true only if you cannot find reliable sources."
@@ -609,6 +613,11 @@ def writer_prompt(cand, notes):
     else:
         research_txt = ("No research notes available. Use only well-established general knowledge. "
                         "Do NOT give prices, dates, opening hours, statistics or phone numbers.")
+    extra = ""
+    if cand["kind"] == "trend":
+        extra = (f"\n- Today is {datetime.date.today().strftime('%B %d, %Y')}. Make the article stay accurate for weeks: "
+                 "never use the words today, tonight, tomorrow, live or now in the title, and say 'as of <month year>' "
+                 "where facts may change.")
     return f"""You are an experienced US journalist and SEO editor. Write {goal}.
 
 {research_txt}
@@ -621,7 +630,7 @@ RULES:
 - Do not copy sentences from any source. No quotes longer than 5 words.
 - No filler openers ("In today's fast-paced world") and avoid the words delve, tapestry, bustling, vibrant.
 - Each section answers a different question; headings are specific (never "Introduction").
-- Plain text only: no markdown, no asterisks, no hashtags.
+- Plain text only: no markdown, no asterisks, no hashtags.{extra}
 - Length: {length}.
 
 Return ONLY one JSON object, no code fences, shaped like:
@@ -1207,6 +1216,8 @@ def main():
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     state.setdefault("skipped", [])
     state.setdefault("history", [])
+    _G["gem_off"] = state.get("gem_off", 0)
+    _G["groq_off"] = state.get("groq_off", 0)
 
     before = len(posts)
     posts = [p for p in posts if p.get("v") == POST_VERSION]   # purani chhoti posts hata do
@@ -1250,6 +1261,10 @@ def main():
     else:
         print("AI keys nahi mili - sirf site rebuild ho rahi hai")
 
+    if _G["gfails"]:      # search quota nahi mila: 3 din tak dobara try nahi
+        state["gem_off"] = time.time() + 3 * 86400
+    if _G["qfails"]:
+        state["groq_off"] = time.time() + 7 * 86400
     now = datetime.datetime.now(datetime.timezone.utc)
     issues = sum(1 for l in LOG if re.search(r"fail|no post", l, re.I))
     state["history"] = (state["history"] + [{"t": now.strftime("%Y-%m-%d %H:%M"), "new": len(new_urls),
