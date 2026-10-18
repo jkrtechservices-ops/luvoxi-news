@@ -194,7 +194,8 @@
   "date": "Oct 18, 2026",
   "iso": "2026-10-18",
   "ts": 1792323423.0407543,
-  "image": "/img/things-to-do-in-round-rock-tx-a-practical-visitor-guide.jpg"
+  "image": "/img/things-to-do-in-round-rock-tx-a-practical-visitor-guide.jpg",
+  "img_v": 2
  },
  {
   "v": 6,
@@ -294,7 +295,8 @@
   "date": "Oct 18, 2026",
   "iso": "2026-10-18",
   "ts": 1792324536.6105003,
-  "image": "/img/explore-gilbert-arizona-suburbs-neighborhoods-stats-tips.jpg"
+  "image": "/img/explore-gilbert-arizona-suburbs-neighborhoods-stats-tips.jpg",
+  "img_v": 2
  },
  {
   "v": 6,
@@ -401,7 +403,8 @@
   "date": "Oct 18, 2026",
   "iso": "2026-10-18",
   "ts": 1792326666.1745646,
-  "image": "/img/plano-vs-frisco-which-texas-suburb-fits-your-lifestyle.jpg"
+  "image": "/img/plano-vs-frisco-which-texas-suburb-fits-your-lifestyle.jpg",
+  "img_v": 2
  },
  {
   "v": 6,
@@ -508,6 +511,7 @@
   "date": "Oct 18, 2026",
   "iso": "2026-10-18",
   "ts": 1792327918.9505901,
-  "image": "/img/plano-vs-katy-which-texas-suburb-fits-your-lifestyle.jpg"
+  "image": "/img/plano-vs-katy-which-texas-suburb-fits-your-lifestyle.jpg",
+  "img_v": 2
  }
 ]
