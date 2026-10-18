@@ -1,14 +1,23 @@
 #!/usr/bin/env python3
-"""Luvoxi News generator (v4).
+"""Luvoxi News generator (v6, self-running).
 Trending topics (Google Trends RSS) + evergreen city guides
--> research (Gemini Google Search, backup Groq web search) -> Groq long article -> Pixabay image -> static site in ./site
+-> Gemini research (Google Search) -> Groq long article -> Pixabay image -> static site in ./site
 """
-import os, re, sys, json, html, hashlib, time, datetime, random
+import os, re, sys, json, html, hashlib, time, datetime, random, builtins
 import xml.etree.ElementTree as ET
 from email.utils import formatdate
 from pathlib import Path
 from urllib.parse import quote
 import requests
+
+LOG = []
+
+
+def print(*args, **kw):
+    """Har message status page ke liye bhi save hota hai."""
+    LOG.append(" ".join(str(a) for a in args)[:220])
+    builtins.print(*args, **kw)
+
 
 # ================= CONFIG =================
 SITE_NAME = "Luvoxi News"
@@ -22,10 +31,8 @@ EXTRA_PLACES = ["Plano, TX", "Frisco, TX", "Katy, TX", "The Woodlands, TX", "Rou
                 "Naperville, IL", "Evanston, IL", "Jersey City, NJ", "Hoboken, NJ", "Pasadena, CA",
                 "Irvine, CA", "Fort Lauderdale, FL", "Coral Springs, FL", "Brooklyn, NY", "Arlington, TX"]
 PLACES = EXTRA_PLACES + CITIES
-TREND_PER_RUN = int(os.getenv("TREND_PER_RUN") or "1")   # har run me trending posts
-GUIDE_PER_RUN = int(os.getenv("GUIDE_PER_RUN") or "1")   # har run me city guides
-MIN_WORDS = {"trend": 700, "guide": 1000}
-POST_VERSION = 4
+MIN_WORDS = {"trend": 600, "guide": 1000}
+POST_VERSION = 5
 GROQ_GAP = 40   # free limit (8K tokens/min) ke liye do Groq calls ke beech seconds
 
 GUIDE_TEMPLATES = [
@@ -45,11 +52,18 @@ GUIDE_TEMPLATES = [
     ("cost", "Cost of Living in {city}: What to Expect"),
 ]
 
-# Adsterra code yahan paste karna (baad me)
-AD_HEADER = ""
-AD_INARTICLE = ""
-AD_FOOTER = ""
-AD_SIDEBAR = ""
+# Search demand ke liye seed searches (Google Autocomplete se asli searches milti hain)
+SEEDS = ["moving to {n}", "living in {n}", "{n} neighborhoods", "best neighborhoods in {n}",
+         "things to do in {n}", "{n} cost of living", "{n} weather by month", "{n} public transportation",
+         "{n} suburbs", "day trips from {n}", "visiting {n}", "{n} vs"]
+GUIDE_BLOCK = re.compile(r"\b(crime|safe|safest|unsafe|dangerous|worst|ghetto|gang|lawyer|attorney|dui|tax|taxes|"
+                         r"covid|jobs?|hiring|salary|for rent|for sale|zillow|craigslist|news|today|tonight|"
+                         r"tomorrow|this weekend|near me|open now|hours|phone number|address)\b", re.I)
+UTILITY_RE = re.compile(r"\b(release date|how to watch|where to watch|live stream|streaming|stream|channel|schedule|"
+                        r"what time|start time|game time|kickoff|tickets?|price|cast|trailer|rules|explained|meaning|"
+                        r"what is|how does|when does|when is)\b", re.I)
+STOP_WORDS = {"the", "a", "an", "to", "of", "in", "for", "from", "and", "is", "are", "what", "best", "tx",
+              "texas", "az", "arizona", "il", "illinois", "nj", "jersey", "ca", "california", "fl", "florida", "ny"}
 
 # Topic chunne me ye sab skip (crime, death, politics, health, disaster)
 BLOCK_PREFIX = ["kill", "shoot", "shot", "murder", "dead", "death", "died", "dies", "dying", "arrest",
@@ -79,6 +93,12 @@ UA = {"User-Agent": "Mozilla/5.0"}
 
 def esc(s):
     return html.escape(s or "", quote=True)
+
+
+def ad(name):
+    """ads/<name>.html file ka code (header, sidebar, inarticle, footer, head)."""
+    p = ROOT / "ads" / f"{name}.html"
+    return p.read_text(encoding="utf-8") if p.exists() else ""
 
 
 def slugify(s):
@@ -151,40 +171,71 @@ def fetch_trends():
         return []
 
 
-def fetch_topic_news():
-    """Backup: Trends na mile to Google News ke topic feeds."""
-    out = []
-    for topic in ("TECHNOLOGY", "BUSINESS", "ENTERTAINMENT", "SPORTS", "SCIENCE"):
+def suggest(q):
+    """Google (ya Bing) Autocomplete: log asal me kya search karte hain."""
+    for url in ("https://suggestqueries.google.com/complete/search?client=firefox&hl=en&gl=us&q=",
+                "https://api.bing.com/osjson.aspx?query="):
         try:
-            r = requests.get("https://news.google.com/rss/headlines/section/topic/" + topic +
-                             "?hl=en-US&gl=US&ceid=US:en", headers=UA, timeout=30)
-            r.raise_for_status()
-            for it in list(ET.fromstring(r.content).iter("item"))[:6]:
-                title = it.findtext("title") or ""
-                src = it.findtext("source") or ""
-                if src and title.endswith(" - " + src):
-                    title = title[: -len(src) - 3]
-                out.append({"title": title, "traffic": 0,
-                            "news": [{"title": title, "url": it.findtext("link") or "", "source": src}]})
-        except Exception as e:
-            print("topic fail:", topic, str(e)[:100])
-    random.shuffle(out)
-    return out
+            r = requests.get(url + quote(q), headers=UA, timeout=15)
+            data = json.loads(r.content.decode("utf-8", "ignore"))
+            sug = [x.strip() for x in data[1] if isinstance(x, str)]
+            if sug:
+                return sug
+        except Exception:
+            pass
+    return []
+
+
+def normkey(s):
+    words = sorted({w for w in re.findall(r"[a-z0-9]+", s.lower()) if w not in STOP_WORDS})
+    return "-".join(words)[:90]
+
+
+def demand_guide(seen, n):
+    """Aisa guide topic jisko log sach me search karte hain (Autocomplete se)."""
+    k = n % len(PLACES)
+    calls = 0
+    for place in PLACES[k:] + PLACES[:k]:
+        name = place.split(",")[0]
+        j = n % len(SEEDS)
+        for seed in SEEDS[j:] + SEEDS[:j]:
+            if calls >= 20:
+                return None
+            calls += 1
+            for s in suggest(seed.format(n=name)):
+                if name.lower() not in s.lower() or len(s.split()) < 3:
+                    continue
+                if is_blocked(s) or GUIDE_BLOCK.search(s):
+                    continue
+                key = "guide:" + normkey(s)
+                if key in seen:
+                    continue
+                return {"kind": "guide", "key": key, "city": place, "topic": s, "hints": ""}
+    return None
 
 
 def trend_candidates(seen):
+    """Trending topics, lekin sirf wahi jinke 'kab/kaise dekhein/release date' jaise asli searches hain."""
     cands = fetch_trends()
     if not cands:
-        print("Trends RSS nahi mila, Google News topics use ho rahe hain")
-        cands = fetch_topic_news()
+        print("Trends RSS nahi mila")
+        return
+    checked = 0
     for c in cands:
-        key = "trend:" + slugify(c["title"])
-        if key in seen:
-            continue
+        if checked >= 12:
+            break
         if is_blocked(c["title"] + " " + " ".join(n["title"] for n in c["news"])):
             continue
-        hints = "\n".join(f'- {n["title"]} ({n["source"]})' for n in c["news"][:4])
-        yield {"kind": "trend", "key": key, "city": "USA", "topic": c["title"], "hints": hints}
+        checked += 1
+        for q in (c["title"], c["title"] + " when", c["title"] + " how to"):
+            hit = next((x for x in suggest(q) if UTILITY_RE.search(x) and similar(x, c["title"])), None)
+            if hit:
+                key = "trend:" + normkey(hit)
+                if key not in seen:
+                    hints = "\n".join(f'- {n["title"]} ({n["source"]})' for n in c["news"][:4])
+                    yield {"kind": "trend", "key": key, "city": "USA", "topic": hit,
+                           "news_q": c["title"], "hints": hints}
+                break
 
 
 def next_guide(seen):
@@ -325,22 +376,19 @@ def llm(prompt, max_tokens=5000):
 def research_gemini(prompt):
     body = {"contents": [{"parts": [{"text": prompt}]}],
             "tools": [{"google_search": {}}], "generationConfig": {"temperature": 0.2}}
-    for rnd in range(2):
-        for m in research_models():
-            try:
-                resp = gemini(body, tries=1, model=m)
-                data = parse_json(text_of(resp))
-                sources = []
-                for c in resp["candidates"][0].get("groundingMetadata", {}).get("groundingChunks", []):
-                    w = c.get("web") or {}
-                    if w.get("uri") and w["uri"] not in [x["url"] for x in sources]:
-                        sources.append({"title": w.get("title") or "Source", "url": w["uri"]})
-                print("research via gemini:", m)
-                return data, sources
-            except Exception as e:
-                print("gemini research", m, "failed:", str(e)[:110])
-        if rnd == 0:
-            time.sleep(25)
+    for m in research_models():
+        try:
+            resp = gemini(body, tries=1, model=m)
+            data = parse_json(text_of(resp))
+            sources = []
+            for c in resp["candidates"][0].get("groundingMetadata", {}).get("groundingChunks", []):
+                w = c.get("web") or {}
+                if w.get("uri") and w["uri"] not in [x["url"] for x in sources]:
+                    sources.append({"title": w.get("title") or "Source", "url": w["uri"]})
+            print("research via gemini:", m)
+            return data, sources
+        except Exception as e:
+            print("gemini research", m, "failed:", str(e)[:110])
     _G["gfails"] += 1
     return None, []
 
@@ -379,14 +427,129 @@ def research_groq(prompt):
     return None, []
 
 
+STATE_NAMES = {"TX": "Texas", "AZ": "Arizona", "IL": "Illinois", "NJ": "New Jersey",
+               "CA": "California", "FL": "Florida", "NY": "New York"}
+WIKI_NAMES = {"New York": "New York City", "Phoenix": "Phoenix, Arizona", "Austin": "Austin, Texas"}
+SECTION_WORDS = ("geograph", "climate", "neighborhood", "district", "economy", "education", "park",
+                 "culture", "transport", "history", "attraction", "see", "do", "eat", "get around",
+                 "get in", "stay", "understand", "overview", "background")
+
+
+def wiki_query(place):
+    if place in WIKI_NAMES:
+        return WIKI_NAMES[place]
+    if "," in place:
+        name, st = [x.strip() for x in place.split(",", 1)]
+        return f"{name}, {STATE_NAMES.get(st, st)}"
+    return place
+
+
+def similar(a, b):
+    wa = {w for w in re.findall(r"[a-z0-9]+", a.lower()) if len(w) > 3}
+    wb = {w for w in re.findall(r"[a-z0-9]+", b.lower()) if len(w) > 3}
+    return bool(wa & wb)
+
+
+def wiki_extract(host, query, cap=3500):
+    """Wikipedia/Wikivoyage ka plain text (zaruri sections ke saath). Return (text, title, url)."""
+    base = f"https://{host}/w/api.php"
+    try:
+        r = requests.get(base, headers=UA, timeout=30, params={
+            "action": "query", "list": "search", "srsearch": query, "srlimit": 1, "format": "json"})
+        hits = r.json()["query"]["search"]
+        if not hits:
+            return "", "", ""
+        title = hits[0]["title"]
+        r = requests.get(base, headers=UA, timeout=30, params={
+            "action": "query", "prop": "extracts", "explaintext": 1, "exsectionformat": "wiki",
+            "redirects": 1, "titles": title, "format": "json"})
+        text = next(iter(r.json()["query"]["pages"].values())).get("extract", "")
+    except Exception as e:
+        print("wiki fail:", host, str(e)[:80])
+        return "", "", ""
+    parts = re.split(r"\n\s*=+\s*(.+?)\s*=+\s*\n", "\n" + text)
+    out = parts[0].strip()[:1200]
+    for i in range(1, len(parts) - 1, 2):
+        if len(out) >= cap:
+            break
+        if any(w in parts[i].lower() for w in SECTION_WORDS):
+            out += f"\n\n{parts[i]}: " + parts[i + 1].strip()[:900]
+    return out[:cap], title, f"https://{host}/wiki/" + quote(title.replace(" ", "_"))
+
+
+def news_text(topic):
+    """Topic ki taaza headlines (Google News RSS). Return (text, sources)."""
+    try:
+        r = requests.get("https://news.google.com/rss/search?q=" + quote(topic) +
+                         "+when:3d&hl=en-US&gl=US&ceid=US:en", headers=UA, timeout=30)
+        r.raise_for_status()
+        items = list(ET.fromstring(r.content).iter("item"))[:10]
+    except Exception as e:
+        print("news fail:", str(e)[:80])
+        return "", []
+    lines, sources = [], []
+    for it in items:
+        title = it.findtext("title") or ""
+        src = it.findtext("source") or ""
+        if src and title.endswith(" - " + src):
+            title = title[: -len(src) - 3]
+        lines.append(f"- {title} ({src}, {(it.findtext('pubDate') or '')[:16]})")
+        if src and len(sources) < 3 and src not in [x["title"] for x in sources]:
+            sources.append({"title": src, "url": it.findtext("link") or ""})
+    return "\n".join(lines), sources
+
+
+def research_free(cand):
+    """Bina search-API ke research: Wikipedia + Wikivoyage (guides) / Google News headlines (trending)."""
+    sources = []
+    if cand["kind"] == "guide":
+        name = cand["city"].split(",")[0]
+        material = ""
+        for host, label, cap in (("en.wikipedia.org", "Wikipedia", 3500), ("en.wikivoyage.org", "Wikivoyage", 3000)):
+            text, title, url = wiki_extract(host, wiki_query(cand["city"]) if label == "Wikipedia" else name, cap)
+            if text and similar(title, name):
+                material += f"\n\n[{label}: {title}]\n{text}"
+                sources.append({"title": f"{label}: {title}", "url": url})
+        if not material:
+            return None, []
+        rule = "Set skip to true only if the material has nothing useful about the place."
+    else:
+        news, sources = news_text(cand.get("news_q") or cand["topic"])
+        if cand["hints"]:
+            news += "\n" + cand["hints"]
+        if news.count("\n") < 2:
+            return None, []
+        material = "[Recent headlines]\n" + news
+        text, title, url = wiki_extract("en.wikipedia.org", cand.get("news_q") or cand["topic"], 2500)
+        if text and similar(title, cand.get("news_q") or cand["topic"]):
+            material += f"\n\n[Wikipedia background: {title}]\n{text}"
+            sources.append({"title": f"Wikipedia: {title}", "url": url})
+        rule = ("Set skip to true if the topic involves a death, crime, accident, missing person, minor, "
+                "health claim, politics or elections, or if the material is too thin.")
+    prompt = f"""You are a research assistant for a US news and guide website.
+From the SOURCE MATERIAL below, extract facts for an article about "{cand['topic']}".
+Use ONLY information found in the material. Each fact is one standalone sentence with names, places and dates when present. No opinions.
+{rule}
+
+Return ONLY one JSON object (no markdown) like:
+{{"skip": false, "reason": "", "facts": ["up to 18 facts"], "questions": ["5 questions readers commonly ask"]}}
+
+SOURCE MATERIAL:{material if cand['kind'] == 'guide' else chr(10) + material}"""
+    try:
+        data = parse_json(llm(prompt, 1800))
+    except Exception as e:
+        print("free research failed:", str(e)[:120])
+        return None, []
+    print("research via free sources")
+    return data, sources
+
+
 def research(cand):
     """Verified facts jama karta hai. None = research available nahi."""
-    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 2
-    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 2
-    if not gemini_ok and not groq_ok:
-        return None
+    gemini_ok = bool(GEMINI_KEY) and _G["gfails"] < 1
+    groq_ok = bool(GROQ_KEYS) and _G["qfails"] < 1
     if cand["kind"] == "guide":
-        what = f'a practical city guide titled "{cand["topic"]}"'
+        what = f'a practical guide that answers the search "{cand["topic"]}" (place: {cand["city"]})'
         skip = "Set skip to true only if you cannot find reliable sources."
     else:
         what = f'the trending US topic "{cand["topic"]}" (why people are searching for it right now)'
@@ -403,8 +566,10 @@ Return ONLY one JSON object (no markdown) like:
     data, sources = None, []
     if gemini_ok:
         data, sources = research_gemini(prompt)
-    if data is None and groq_ok and _G["qfails"] < 2:
+    if data is None and groq_ok:
         data, sources = research_groq(prompt)
+    if data is None:
+        data, sources = research_free(cand)
     if data is None:
         return None
     if data.get("skip"):
@@ -430,10 +595,10 @@ SCHEMA = """{
 
 def writer_prompt(cand, notes):
     if cand["kind"] == "guide":
-        goal = f'a helpful, practical city guide titled "{cand["topic"]}" for people searching Google for this topic'
+        goal = f'a helpful, practical guide for people who search Google for "{cand["topic"]}" (place: {cand["city"]}); the title must include this keyword naturally'
         length = "1,200-1,500 words in total: 6-7 sections of 150-220 words each, plus 4-5 FAQ answers"
     else:
-        goal = f'an explainer about the trending US topic "{cand["topic"]}" for readers who just searched for it'
+        goal = f'a practical explainer for people who search Google for "{cand["topic"]}" (a topic trending in the US right now); the title must include this keyword naturally'
         length = "800-1,100 words in total: 5 sections of 130-190 words each, plus 4 FAQ answers"
     if notes:
         research_txt = "RESEARCH NOTES (the only facts you may state as facts):\n" + \
@@ -592,9 +757,9 @@ def build_post(cand):
     return "ok", post
 
 
-def produce(kind, seen, state, posts):
+def produce(kind, seen, state, posts, n=0):
     if kind == "guide":
-        cand = next_guide(seen)
+        cand = demand_guide(seen, n) or next_guide(seen)
         if cand:
             status, post = build_post(cand)
             if status == "skip":
@@ -725,7 +890,7 @@ def sidebar():
         for p in LATEST[:6])
     cities = "".join(f'<a href="/city/{city_slug(c)}/">{esc(c)}</a>' for c in CITIES)
     return (f'<div class="box"><h3>Latest</h3>{items or "<p class=meta>Coming soon.</p>"}</div>'
-            f'<div class="ad">{AD_SIDEBAR}</div>'
+            f'<div class="ad">{ad("sidebar")}</div>'
             f'<div class="box"><h3>City guides</h3><div class="chips">{cities}</div></div>')
 
 
@@ -747,13 +912,13 @@ def page(title, desc, body, path, image="", head_extra="", robots=""):
 <link rel="icon" href="{fav}">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(desc)}">
 <meta property="og:type" content="website"><meta property="og:url" content="{SITE_URL}{path}">{og_img}
-<meta name="twitter:card" content="summary_large_image">{head_extra}
+<meta name="twitter:card" content="summary_large_image">{head_extra}{ad("head")}
 </head><body>
 <header class="top"><div class="wrap bar"><a class="brand" href="/">{esc(SITE_NAME)}</a><span class="date">{today}</span></div>
 <div class="wrap"><nav>{nav}</nav></div></header>
-<div class="wrap grow"><div class="ad">{AD_HEADER}</div>
+<div class="wrap grow"><div class="ad">{ad("header")}</div>
 <main class="layout"><div class="main">{body}</div><aside>{sidebar()}</aside></main>
-<div class="ad">{AD_FOOTER}</div></div>
+<div class="ad">{ad("footer")}</div></div>
 <footer><div class="wrap foot">
 <div><a class="brand" href="/">{esc(SITE_NAME)}</a><p>Trending explainers and practical city guides for the USA. Written with AI assistance, researched from public reporting, with sources listed.</p></div>
 <div class="links"><h4>Explore</h4><a href="/trending/">Trending</a><a href="/guides/">City guides</a><a href="/archive/">Archive</a></div>
@@ -826,7 +991,7 @@ def article_html(p, url, related):
         toc_items.append('<li><a href="#faq">Frequently asked questions</a></li>')
     toc = '<nav class="toc" aria-label="Contents"><strong>In this article</strong><ol>' + "".join(toc_items) + "</ol></nav>"
     blocks = [f'<h2 id="{i}">{esc(s["heading"])}</h2>' + render_text(s["text"]) for i, s in zip(ids, p["sections"])]
-    blocks.insert(min(2, len(blocks)), f'<div class="ad">{AD_INARTICLE}</div>')
+    blocks.insert(min(2, len(blocks)), f'<div class="ad">{ad("inarticle")}</div>')
     faq = ""
     if p.get("faq"):
         faq = '<h2 id="faq">Frequently asked questions</h2>' + "".join(
@@ -971,6 +1136,10 @@ def build_site(posts):
                             'Try the <a href="/">home page</a> or the <a href="/archive/">archive</a>.</p></article>',
                             "/404.html", robots="noindex"))
 
+    if (ROOT / "ads.txt").exists():
+        write("/ads.txt", (ROOT / "ads.txt").read_text(encoding="utf-8"))
+    write("/status/", status_page(posts))
+
     sm = "".join(f"<url><loc>{SITE_URL}{u}</loc><lastmod>{d}</lastmod></url>" for u, d in urls)
     write("/sitemap.xml", f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{sm}</urlset>')
     write("/robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE_URL}/sitemap.xml\n")
@@ -992,6 +1161,21 @@ def build_site(posts):
         for f in (SITE / "img").iterdir():
             if f.name not in used:
                 f.unlink()
+
+
+def status_page(posts):
+    st = json.loads(STATE.read_text()) if STATE.exists() else {}
+    hist = st.get("history", [])[-14:]
+    rows = "".join(f"<tr><td>{esc(h['t'])}</td><td>{h['new']}</td><td>{h['issues']}</td></tr>" for h in reversed(hist))
+    week = sum(1 for p in posts if time.time() - p["ts"] < 7 * 86400)
+    logs = "<br>".join(esc(x) for x in st.get("last_log", [])[-30:])
+    body = ('<article class="post"><h1>Status</h1>'
+            f'<p>Last run (UTC): <strong>{esc(hist[-1]["t"]) if hist else "never"}</strong><br>'
+            f'Total posts: <strong>{len(posts)}</strong> &middot; last 7 days: <strong>{week}</strong></p>'
+            '<p>Healthy = a run every ~6 hours with new posts. "Issues" counts log lines that mention a failure.</p>'
+            f'<table><tr><th>Run (UTC)</th><th>New posts</th><th>Issues</th></tr>{rows}</table>'
+            f'<h2>Last run log</h2><p style="font:13px/1.5 monospace">{logs}</p></article>')
+    return page("Status", "Site status", body, "/status/", robots="noindex,nofollow")
 
 
 def indexnow_key():
@@ -1020,7 +1204,9 @@ def main():
         return ping_indexnow()
     DATA.parent.mkdir(exist_ok=True)
     posts = json.loads(DATA.read_text()) if DATA.exists() else []
-    state = json.loads(STATE.read_text()) if STATE.exists() else {"skipped": []}
+    state = json.loads(STATE.read_text()) if STATE.exists() else {}
+    state.setdefault("skipped", [])
+    state.setdefault("history", [])
 
     before = len(posts)
     posts = [p for p in posts if p.get("v") == POST_VERSION]   # purani chhoti posts hata do
@@ -1036,11 +1222,21 @@ def main():
 
     seen = {p["key"] for p in posts if p.get("key")} | set(state["skipped"])
     _SLUGS.update(p["slug"] for p in posts)
+
+    t_env = (os.getenv("TREND_PER_RUN") or "").strip()
+    g_env = (os.getenv("GUIDE_PER_RUN") or "").strip()
+    n = state.get("n", 0)
+    if t_env or g_env:   # manual run
+        plan = ["trend"] * int(t_env or 0) + ["guide"] * int(g_env or 0)
+    else:                # auto: har 3rd run me trending, baaki guides
+        plan = ["trend" if n % 3 == 2 else "guide"]
+    state["n"] = n + len(plan)
+
     new_urls = []
     if GEMINI_KEY or GROQ_KEYS:
-        for kind in ["trend"] * TREND_PER_RUN + ["guide"] * GUIDE_PER_RUN:
+        for i, kind in enumerate(plan):
             try:
-                post = produce(kind, seen, state, posts)
+                post = produce(kind, seen, state, posts, n + i)
             except Exception as e:
                 print("produce fail:", str(e)[:200])
                 post = None
@@ -1049,12 +1245,20 @@ def main():
                 seen.add(post["key"])
                 new_urls.append(f"{SITE_URL}/news/{post['slug']}/")
                 print("posted:", post["title"], "|", post["kind"], "|", len(" ".join(post["paragraphs"]).split()), "words")
+            else:
+                print("no post made for kind:", kind)
     else:
         print("AI keys nahi mili - sirf site rebuild ho rahi hai")
 
+    now = datetime.datetime.now(datetime.timezone.utc)
+    issues = sum(1 for l in LOG if re.search(r"fail|no post", l, re.I))
+    state["history"] = (state["history"] + [{"t": now.strftime("%Y-%m-%d %H:%M"), "new": len(new_urls),
+                                               "issues": issues}])[-60:]
+    state["last_log"] = LOG[-40:]
     state["skipped"] = state["skipped"][-500:]
     STATE.write_text(json.dumps(state))
     (DATA.parent / "new_urls.json").write_text(json.dumps(new_urls))
+    (DATA.parent / "heartbeat.txt").write_text(now.strftime("%Y-%m-%d"))   # repo active rakhta hai
     DATA.write_text(json.dumps(posts, ensure_ascii=False, indent=1))
     build_site(posts)
     print(f"done. new posts: {len(new_urls)}, total: {len(posts)}")
