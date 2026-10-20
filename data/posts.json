@@ -813,5 +813,118 @@
   "ts": 1792447683.9658995,
   "image": "/img/cost-of-living-in-scottsdale-az-what-to-expect.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:compare:Plano, TX|Round Rock, TX",
+  "slug": "plano-vs-round-rock-which-city-fits-your-lifestyle",
+  "city": "Plano, TX",
+  "title": "Plano vs Round Rock: Which City Fits Your Lifestyle?",
+  "summary": "Compare Plano and Round Rock on size, income, rent, home values, affordability, and who each city suits best.",
+  "intro": "Plano and Round Rock are fast‑growing Texas suburbs that attract families, professionals, and retirees. Plano boasts a larger population and higher median income, while Round Rock offers slightly lower housing costs and a younger demographic. This side‑by‑side look helps you decide which community aligns with your budget and lifestyle.",
+  "bullets": [
+   "Plano is almost twice as large as Round Rock.",
+   "Median household income is about $13,000 higher in Plano.",
+   "Home values are roughly $47,000 more expensive in Plano.",
+   "Both cities have similar home‑ownership rates, around 56‑57%."
+  ],
+  "sections": [
+   {
+    "heading": "Population and Size: How Big Is Each City?",
+    "text": "Plano’s 2020‑2024 ACS estimate puts its population at 290,594, making it the ninth‑most populous city in Texas. Round Rock’s estimate is 127,786, less than half of Plano’s size. The difference of 162,808 residents means Plano feels more like a major suburban hub, while Round Rock retains a smaller‑town atmosphere within the Greater Austin metro area."
+   },
+   {
+    "heading": "Income Levels: Which City Earns More?",
+    "text": "The median household income in Plano is $112,253 per year, about $12,966 higher than Round Rock’s $99,287. This 13% gap reflects Plano’s concentration of corporate headquarters such as Frito‑Lay, JCPenney, Pizza Hut, and Toyota Motor North America, while Round Rock’s economy is anchored by Dell’s international headquarters."
+   },
+   {
+    "heading": "Rent Prices: Cost of Renting a Home",
+    "text": "Median gross rent in Plano sits at $1,841 per month, just $78—or roughly 4%—higher than the $1,763 median in Round Rock. At first glance the difference seems modest, but when paired with each city’s income levels it tells a clearer story about affordability. Plano’s median household income is $112,253, about $13,000 (13%) above Round Rock’s $99,287. Consequently, the rent‑to‑income ratio in Plano works out to roughly 20% of median earnings, while Round Rock’s ratio nudges up to 21%. Both figures hover near the national benchmark for “affordable” housing, indicating that despite the slightly higher price tag, Plano renters are not shouldering a substantially larger burden than their Round Rock counterparts.\n\nThe broader housing market reinforces this parity. Owner‑occupied homes in Plano have a median value of $465,900—about $47,300 (11%) more than Round Rock’s $418,600—yet the share of owner‑occupied units is nearly identical (57% in Plano versus 56% in Round Rock). With Plano’s population of 290,594 (more than double Round Rock’s 127,786), the city’s larger tax base supports a robust rental inventory that keeps the cost‑to‑income balance steady. For prospective renters, the decision may therefore hinge less on raw rent dollars and more on lifestyle preferences, commute patterns, and the amenities each suburb of the Dallas‑Fort Worth and Austin metros offers."
+   },
+   {
+    "heading": "Home Values and Ownership Rates",
+    "text": "Owner‑occupied homes in Plano carry a median value of $465,900, roughly 11 % higher than the $418,600 median in Round Rock. This price gap reflects Plano’s larger, more affluent population—290,594 residents versus Round Rock’s 127,786—​and a higher median household income ($112,253 versus $99,287, a $12,966 difference). Even though both cities exhibit strong home‑ownership cultures—57 % of occupied units are owner‑occupied in Plano compared with 56 % in Round Rock—the slightly higher ownership rate in Plano aligns with its greater wealth base.\n\nThe cost of renting mirrors this trend. Plano’s median gross rent is $1,841 per month, about $78 (4 %) above Round Rock’s $1,763. When expressed as a share of income, rent consumes roughly 20 % of Plano’s median household earnings, compared with 21 % in Round Rock, indicating that both markets remain relatively affordable despite the price differences.\n\nAge demographics also play a role in housing preferences. Plano’s median resident age is 39.6 years, a few years older than Round Rock’s 36.2, suggesting a more established homeowner base in Plano, while Round Rock’s younger population may be more inclined toward renting or first‑time buying. Together, these figures paint a nuanced picture: Plano offers higher‑valued homes and slightly higher ownership rates within a wealthier, older demographic, whereas Round Rock provides a more modest price point and a youthful, still‑growing community of owners and renters."
+   },
+   {
+    "heading": "Affordability: Which City Is Cheaper Overall?",
+    "text": "While Plano’s incomes are higher, its home values and rents are also higher, offsetting the income advantage. Round Rock’s lower median home price and slightly cheaper rent make it marginally more affordable for buyers and renters on a tighter budget, even though the rent‑to‑income ratio is similar in both cities."
+   },
+   {
+    "heading": "What Each City Is Known For",
+    "text": "Plano is recognized as a principal suburb of the Dallas–Fort Worth metroplex and the largest city in Collin County, home to several Fortune‑500 corporate headquarters. Round Rock, part of the Greater Austin area, is famous for the historic “round rock” in Brushy Creek, its Old Town district, and as the international headquarters of Dell, with major retail centers like IKEA and Premium Outlets."
+   },
+   {
+    "heading": "Who Should Choose Plano or Round Rock?",
+    "text": "Plano appeals to professionals seeking higher salaries, corporate proximity, and a larger urban feel. Its median age of 39.6 suggests a mature, established community. Round Rock attracts younger families and first‑time homebuyers who value a lower price point, a median age of 36.2, and easy access to Austin’s cultural scene while still enjoying suburban amenities."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Is Plano or Round Rock cheaper to live in?",
+    "a": "Round Rock is slightly cheaper. Its median home value is $418,600 versus Plano’s $465,900, and rent is $78 lower per month."
+   },
+   {
+    "q": "Which has higher incomes, Plano or Round Rock?",
+    "a": "Plano has higher median household income at $112,253, compared with Round Rock’s $99,287."
+   },
+   {
+    "q": "Is rent higher in Plano or Round Rock?",
+    "a": "Rent is higher in Plano. The median gross rent is $1,841, while Round Rock’s median is $1,763."
+   },
+   {
+    "q": "Which is better for families, Plano or Round Rock?",
+    "a": "Both offer family‑friendly environments, but Round Rock’s lower housing costs and younger median age may suit growing families, while Plano’s larger schools and corporate jobs attract families seeking higher earnings."
+   },
+   {
+    "q": "Is Plano or Round Rock bigger?",
+    "a": "Plano is larger. Its population of 290,594 is about 127% higher than Round Rock’s 127,786."
+   }
+  ],
+  "conclusion": "Plano delivers higher incomes and a big‑city feel at a premium price, while Round Rock offers a more affordable entry point with a younger vibe. Weigh your budget, career goals, and lifestyle preferences to choose the city that best matches your next chapter.",
+  "paragraphs": [
+   "Plano and Round Rock are fast‑growing Texas suburbs that attract families, professionals, and retirees. Plano boasts a larger population and higher median income, while Round Rock offers slightly lower housing costs and a younger demographic. This side‑by‑side look helps you decide which community aligns with your budget and lifestyle.",
+   "Plano’s 2020‑2024 ACS estimate puts its population at 290,594, making it the ninth‑most populous city in Texas. Round Rock’s estimate is 127,786, less than half of Plano’s size. The difference of 162,808 residents means Plano feels more like a major suburban hub, while Round Rock retains a smaller‑town atmosphere within the Greater Austin metro area.",
+   "The median household income in Plano is $112,253 per year, about $12,966 higher than Round Rock’s $99,287. This 13% gap reflects Plano’s concentration of corporate headquarters such as Frito‑Lay, JCPenney, Pizza Hut, and Toyota Motor North America, while Round Rock’s economy is anchored by Dell’s international headquarters.",
+   "Median gross rent in Plano sits at $1,841 per month, just $78—or roughly 4%—higher than the $1,763 median in Round Rock. At first glance the difference seems modest, but when paired with each city’s income levels it tells a clearer story about affordability. Plano’s median household income is $112,253, about $13,000 (13%) above Round Rock’s $99,287. Consequently, the rent‑to‑income ratio in Plano works out to roughly 20% of median earnings, while Round Rock’s ratio nudges up to 21%. Both figures hover near the national benchmark for “affordable” housing, indicating that despite the slightly higher price tag, Plano renters are not shouldering a substantially larger burden than their Round Rock counterparts.\n\nThe broader housing market reinforces this parity. Owner‑occupied homes in Plano have a median value of $465,900—about $47,300 (11%) more than Round Rock’s $418,600—yet the share of owner‑occupied units is nearly identical (57% in Plano versus 56% in Round Rock). With Plano’s population of 290,594 (more than double Round Rock’s 127,786), the city’s larger tax base supports a robust rental inventory that keeps the cost‑to‑income balance steady. For prospective renters, the decision may therefore hinge less on raw rent dollars and more on lifestyle preferences, commute patterns, and the amenities each suburb of the Dallas‑Fort Worth and Austin metros offers.",
+   "Owner‑occupied homes in Plano carry a median value of $465,900, roughly 11 % higher than the $418,600 median in Round Rock. This price gap reflects Plano’s larger, more affluent population—290,594 residents versus Round Rock’s 127,786—​and a higher median household income ($112,253 versus $99,287, a $12,966 difference). Even though both cities exhibit strong home‑ownership cultures—57 % of occupied units are owner‑occupied in Plano compared with 56 % in Round Rock—the slightly higher ownership rate in Plano aligns with its greater wealth base.\n\nThe cost of renting mirrors this trend. Plano’s median gross rent is $1,841 per month, about $78 (4 %) above Round Rock’s $1,763. When expressed as a share of income, rent consumes roughly 20 % of Plano’s median household earnings, compared with 21 % in Round Rock, indicating that both markets remain relatively affordable despite the price differences.\n\nAge demographics also play a role in housing preferences. Plano’s median resident age is 39.6 years, a few years older than Round Rock’s 36.2, suggesting a more established homeowner base in Plano, while Round Rock’s younger population may be more inclined toward renting or first‑time buying. Together, these figures paint a nuanced picture: Plano offers higher‑valued homes and slightly higher ownership rates within a wealthier, older demographic, whereas Round Rock provides a more modest price point and a youthful, still‑growing community of owners and renters.",
+   "While Plano’s incomes are higher, its home values and rents are also higher, offsetting the income advantage. Round Rock’s lower median home price and slightly cheaper rent make it marginally more affordable for buyers and renters on a tighter budget, even though the rent‑to‑income ratio is similar in both cities.",
+   "Plano is recognized as a principal suburb of the Dallas–Fort Worth metroplex and the largest city in Collin County, home to several Fortune‑500 corporate headquarters. Round Rock, part of the Greater Austin area, is famous for the historic “round rock” in Brushy Creek, its Old Town district, and as the international headquarters of Dell, with major retail centers like IKEA and Premium Outlets.",
+   "Plano appeals to professionals seeking higher salaries, corporate proximity, and a larger urban feel. Its median age of 39.6 suggests a mature, established community. Round Rock attracts younger families and first‑time homebuyers who value a lower price point, a median age of 36.2, and easy access to Austin’s cultural scene while still enjoying suburban amenities.",
+   "Round Rock is slightly cheaper. Its median home value is $418,600 versus Plano’s $465,900, and rent is $78 lower per month.",
+   "Plano has higher median household income at $112,253, compared with Round Rock’s $99,287.",
+   "Rent is higher in Plano. The median gross rent is $1,841, while Round Rock’s median is $1,763.",
+   "Both offer family‑friendly environments, but Round Rock’s lower housing costs and younger median age may suit growing families, while Plano’s larger schools and corporate jobs attract families seeking higher earnings.",
+   "Plano is larger. Its population of 290,594 is about 127% higher than Round Rock’s 127,786.",
+   "Plano delivers higher incomes and a big‑city feel at a premium price, while Round Rock offers a more affordable entry point with a younger vibe. Weigh your budget, career goals, and lifestyle preferences to choose the city that best matches your next chapter."
+  ],
+  "sources": [
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   },
+   {
+    "title": "Wikipedia: Plano, Texas",
+    "url": "https://en.wikipedia.org/wiki/Plano%2C_Texas"
+   },
+   {
+    "title": "Wikivoyage: Plano",
+    "url": "https://en.wikivoyage.org/wiki/Plano"
+   },
+   {
+    "title": "Wikipedia: Round Rock, Texas",
+    "url": "https://en.wikipedia.org/wiki/Round_Rock%2C_Texas"
+   },
+   {
+    "title": "Wikivoyage: Round Rock",
+    "url": "https://en.wikivoyage.org/wiki/Round_Rock"
+   }
+  ],
+  "researched": true,
+  "date": "Oct 20, 2026",
+  "iso": "2026-10-20",
+  "ts": 1792467902.2180235,
+  "image": "/img/plano-vs-round-rock-which-city-fits-your-lifestyle.jpg",
+  "img_v": 2
  }
 ]
