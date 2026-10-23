@@ -1873,5 +1873,92 @@
   "ts": 1792727001.396689,
   "image": "/img/plano-vs-san-antonio-size-cost-and-lifestyle.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:New York:cost",
+  "slug": "cost-of-living-in-new-york-what-to-expect",
+  "city": "New York",
+  "title": "Cost of Living in New York: What to Expect",
+  "summary": "Learn New York's population, median income, rent, home values and age profile to gauge the cost of living.",
+  "intro": "New York’s cost of living reflects a large, diverse population and high housing prices. With a median household income of $80,483, renters face a median gross rent of $1,821 per month, while owners see median home values around $777,600. Understanding these figures helps you plan your budget before moving to the state.",
+  "bullets": [
+   "Median household income is $80,483.",
+   "Median rent is $1,821 per month.",
+   "Median home value is $777,600.",
+   "One‑third of housing units are owner‑occupied."
+  ],
+  "sections": [
+   {
+    "heading": "Population size and demographic snapshot",
+    "text": "The 2020‑2024 American Community Survey estimates New York’s population at 8,483,844. This makes the state one of the most populous in the nation, influencing demand for housing, transportation and services. The median age of residents is 38.2 years, indicating a relatively young workforce that fuels the state’s economy and cultural scene."
+   },
+   {
+    "heading": "What median household income means for your budget",
+    "text": "The median household income in New York is $80,483 per year, according to the latest ACS data. This figure serves as a benchmark for budgeting, as many expenses—especially housing—are tied to income levels. Households earning near the median will find that a sizable portion of their earnings goes toward rent or mortgage payments."
+   },
+   {
+    "heading": "Rent costs you can expect",
+    "text": "Renters in New York face a median gross rent of $1,821 per month. This amount includes basic rent and typical utilities, giving a realistic picture of monthly housing costs. When planning a move, compare this median to specific neighborhoods, as rent can vary widely across the state."
+   },
+   {
+    "heading": "Owner‑occupied housing market overview",
+    "text": "Owner‑occupied homes in New York have a median value of $777,600, a figure that places the state among the nation’s most expensive housing markets. Yet only about one‑third of the 8,483,844 residents—roughly 33 % of occupied housing units—actually own the property they live in, while the remaining two‑thirds rent. This relatively low ownership rate reflects both the high price tag of purchasing a home and the demographic profile of the state: the median age is 38.2 years, meaning many households are still in the early to mid‑career stage when renting is often more feasible than taking on a sizable mortgage.\n\nThe median household income of $80,483 per year provides some context for affordability. Even with that income, a typical family would need to allocate a substantial portion of earnings to cover a mortgage on a $777,600 home, especially after accounting for New York’s property taxes, which can range from 0.5 % to 2 % of assessed value depending on the locality. By contrast, the median gross rent sits at $1,821 per month, a cost that, while still high, is generally more attainable for renters and offers flexibility for a mobile workforce.\n\nThese dynamics shape the real‑estate landscape: limited homeownership sustains strong demand for rental units, keeps vacancy rates low, and encourages developers to focus on multifamily projects. At the same time, lenders remain cautious, balancing the high loan‑to‑value ratios required for such expensive properties with the state’s income distribution. Property‑tax considerations, mortgage availability, and the prevailing rent levels together create a nuanced market where ownership is a significant milestone but remains out of reach for many New Yorkers."
+   },
+   {
+    "heading": "How age and income intersect in cost planning",
+    "text": "With a median age of 38.2 years, New York’s residents are largely in the prime of their earning potential, a fact that dovetails with the state’s median household income of $80,483 per year. This convergence creates a distinctive financial balancing act: many households are simultaneously pushing for career advancement while shouldering the state’s steep housing costs. For renters, the median gross rent sits at $1,821 a month, which consumes roughly 27 % of the median income—well above the 30 % affordability threshold that housing experts cite as sustainable. Meanwhile, only about one‑third of occupied housing units (≈33 %) are owner‑occupied, reflecting the formidable barrier to entry posed by a median home value of $777,600. Young professionals in their late‑30s who are still paying off student loans or supporting families often find themselves stretched between these two worlds, allocating a sizable share of their paycheck to either rent or mortgage payments while also budgeting for transportation, childcare, and savings. The sheer scale of New York’s population—8,483,844 people according to the 2020‑2024 ACS—amplifies these pressures, as demand for both rental units and homes outpaces supply, driving prices upward. Consequently, age‑related life stages (first‑time renters, growing families, or mid‑career homebuyers) intersect sharply with income realities, making meticulous cost planning essential for anyone navigating New York’s high‑cost environment."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Is the median rent in New York affordable for most people?",
+    "a": "The median gross rent of $1,821 per month represents a typical cost, but affordability depends on individual income. Households earning the median income of $80,483 may need to allocate a large share of earnings to housing, making budgeting essential."
+   },
+   {
+    "q": "What percentage of New York homes are owned versus rented?",
+    "a": "Approximately 33% of occupied housing units are owner‑occupied, meaning the remaining two‑thirds are rented. This ratio highlights a strong rental market across the state."
+   },
+   {
+    "q": "How does the median age affect the cost of living?",
+    "a": "A median age of 38.2 years suggests many residents are in mid‑career stages, often with higher incomes but also greater financial responsibilities, such as mortgages or family expenses, influencing overall cost of living."
+   },
+   {
+    "q": "Are home values in New York higher than the national average?",
+    "a": "The median value of owner‑occupied homes in New York is $777,600, which is substantially higher than the national median home value, reflecting the state's competitive real estate market."
+   },
+   {
+    "q": "What income level should I aim for to live comfortably in New York?",
+    "a": "Targeting an income at or above the median household income of $80,483 can provide a baseline for covering typical expenses, including the median rent of $1,821 and other living costs."
+   }
+  ],
+  "conclusion": "New York’s cost of living is shaped by a large population, a median income of $80,483, high rent at $1,821, and home values near $777,600. Use these benchmarks to compare your budget and decide whether renting or buying fits your financial goals.",
+  "paragraphs": [
+   "New York’s cost of living reflects a large, diverse population and high housing prices. With a median household income of $80,483, renters face a median gross rent of $1,821 per month, while owners see median home values around $777,600. Understanding these figures helps you plan your budget before moving to the state.",
+   "The 2020‑2024 American Community Survey estimates New York’s population at 8,483,844. This makes the state one of the most populous in the nation, influencing demand for housing, transportation and services. The median age of residents is 38.2 years, indicating a relatively young workforce that fuels the state’s economy and cultural scene.",
+   "The median household income in New York is $80,483 per year, according to the latest ACS data. This figure serves as a benchmark for budgeting, as many expenses—especially housing—are tied to income levels. Households earning near the median will find that a sizable portion of their earnings goes toward rent or mortgage payments.",
+   "Renters in New York face a median gross rent of $1,821 per month. This amount includes basic rent and typical utilities, giving a realistic picture of monthly housing costs. When planning a move, compare this median to specific neighborhoods, as rent can vary widely across the state.",
+   "Owner‑occupied homes in New York have a median value of $777,600, a figure that places the state among the nation’s most expensive housing markets. Yet only about one‑third of the 8,483,844 residents—roughly 33 % of occupied housing units—actually own the property they live in, while the remaining two‑thirds rent. This relatively low ownership rate reflects both the high price tag of purchasing a home and the demographic profile of the state: the median age is 38.2 years, meaning many households are still in the early to mid‑career stage when renting is often more feasible than taking on a sizable mortgage.\n\nThe median household income of $80,483 per year provides some context for affordability. Even with that income, a typical family would need to allocate a substantial portion of earnings to cover a mortgage on a $777,600 home, especially after accounting for New York’s property taxes, which can range from 0.5 % to 2 % of assessed value depending on the locality. By contrast, the median gross rent sits at $1,821 per month, a cost that, while still high, is generally more attainable for renters and offers flexibility for a mobile workforce.\n\nThese dynamics shape the real‑estate landscape: limited homeownership sustains strong demand for rental units, keeps vacancy rates low, and encourages developers to focus on multifamily projects. At the same time, lenders remain cautious, balancing the high loan‑to‑value ratios required for such expensive properties with the state’s income distribution. Property‑tax considerations, mortgage availability, and the prevailing rent levels together create a nuanced market where ownership is a significant milestone but remains out of reach for many New Yorkers.",
+   "With a median age of 38.2 years, New York’s residents are largely in the prime of their earning potential, a fact that dovetails with the state’s median household income of $80,483 per year. This convergence creates a distinctive financial balancing act: many households are simultaneously pushing for career advancement while shouldering the state’s steep housing costs. For renters, the median gross rent sits at $1,821 a month, which consumes roughly 27 % of the median income—well above the 30 % affordability threshold that housing experts cite as sustainable. Meanwhile, only about one‑third of occupied housing units (≈33 %) are owner‑occupied, reflecting the formidable barrier to entry posed by a median home value of $777,600. Young professionals in their late‑30s who are still paying off student loans or supporting families often find themselves stretched between these two worlds, allocating a sizable share of their paycheck to either rent or mortgage payments while also budgeting for transportation, childcare, and savings. The sheer scale of New York’s population—8,483,844 people according to the 2020‑2024 ACS—amplifies these pressures, as demand for both rental units and homes outpaces supply, driving prices upward. Consequently, age‑related life stages (first‑time renters, growing families, or mid‑career homebuyers) intersect sharply with income realities, making meticulous cost planning essential for anyone navigating New York’s high‑cost environment.",
+   "The median gross rent of $1,821 per month represents a typical cost, but affordability depends on individual income. Households earning the median income of $80,483 may need to allocate a large share of earnings to housing, making budgeting essential.",
+   "Approximately 33% of occupied housing units are owner‑occupied, meaning the remaining two‑thirds are rented. This ratio highlights a strong rental market across the state.",
+   "A median age of 38.2 years suggests many residents are in mid‑career stages, often with higher incomes but also greater financial responsibilities, such as mortgages or family expenses, influencing overall cost of living.",
+   "The median value of owner‑occupied homes in New York is $777,600, which is substantially higher than the national median home value, reflecting the state's competitive real estate market.",
+   "Targeting an income at or above the median household income of $80,483 can provide a baseline for covering typical expenses, including the median rent of $1,821 and other living costs.",
+   "New York’s cost of living is shaped by a large population, a median income of $80,483, high rent at $1,821, and home values near $777,600. Use these benchmarks to compare your budget and decide whether renting or buying fits your financial goals."
+  ],
+  "sources": [
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   }
+  ],
+  "researched": true,
+  "date": "Oct 23, 2026",
+  "iso": "2026-10-23",
+  "ts": 1792754047.7723324,
+  "image": "/img/cost-of-living-in-new-york-what-to-expect.jpg",
+  "img_v": 2
  }
 ]
