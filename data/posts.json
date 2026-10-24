@@ -2234,5 +2234,113 @@
   "ts": 1792838317.7126865,
   "image": "/img/cost-of-living-in-phoenix-what-to-expect.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:compare:Plano, TX|Austin",
+  "slug": "plano-vs-austin-which-texas-city-fits-your-lifestyle",
+  "city": "Plano, TX",
+  "title": "Plano vs Austin: Which Texas City Fits Your Lifestyle?",
+  "summary": "Compare Plano and Austin on size, income, rent, home values, affordability, vibe, and who each city suits best.",
+  "intro": "Plano and Austin are two of Texas' most talked‑about places, but they differ sharply in scale, earnings, housing costs and overall feel. Plano offers higher median incomes and lower home prices, while Austin boasts a larger, younger population and a cultural reputation as the state capital. Knowing these contrasts helps you decide which city aligns with your budget and lifestyle.",
+  "bullets": [
+   "Plano earns about $18,600 more per household than Austin.",
+   "Austin’s median home value is roughly $89,400 higher.",
+   "Plano’s rent is 20% of income; Austin’s is 22%.",
+   "Austin’s population is nearly 1 million, three times Plano’s."
+  ],
+  "sections": [
+   {
+    "heading": "Population size and density",
+    "text": "Austin’s estimated population of 979,539 dwarfs Plano’s 290,594, making Austin about 688,945 (237%) larger. Austin spreads across 305.1 square miles, while Plano occupies 71.6 square miles. The bigger, more sprawling Austin feels like a major metropolitan hub, whereas Plano’s smaller footprint gives it a suburban atmosphere within the Dallas‑Fort Worth metroplex."
+   },
+   {
+    "heading": "Median household income",
+    "text": "Plano’s median household income sits at $112,253, about $18,595 (roughly 20 %) higher than Austin’s $93,658.  This earnings advantage is closely tied to the city’s concentration of corporate headquarters—including Frito‑Lay, JCPenney, Pizza Hut and Toyota Motor North America—which draw high‑paying professionals and boost overall wage levels.  With a median age of 39.6 years, Plano’s residents tend to be slightly older and more established in their careers than Austin’s median‑aged 34.7‑year population.\n\nHigher incomes in Plano translate into a modestly higher cost of housing.  The median gross rent is $1,841 per month, about 6 % more than Austin’s $1,729, yet rent still consumes only around 20 % of a typical Plano household’s earnings—slightly lower than Austin’s 22 % share.  Homeownership is also more prevalent in Plano, with 57 % of occupied units owner‑occupied versus 43 % in Austin.  The median value of an owner‑occupied home in Plano is $465,900, which is $89,400 (about 19 %) less than Austin’s $555,300, reflecting the larger supply of suburban single‑family homes in the Dallas‑Fort Worth metro area.\n\nFor families and professionals weighing purchasing power, Plano offers a higher average paycheck and a lower home‑price-to‑income ratio, while still delivering a comfortable rental market.  Austin, by contrast, provides a larger, younger population and higher home values, which may appeal to those prioritizing urban vibrancy over pure purchasing power."
+   },
+   {
+    "heading": "Rent costs and affordability ratio",
+    "text": "The median gross rent in Plano is $1,841 per month, about $112 (6%) higher than Austin’s $1,729. When measured against household income, rent consumes roughly 20% of Plano’s median earnings and 22% of Austin’s. Both cities sit near the national affordability benchmark, but Plano’s slightly higher income makes its rent feel a bit more affordable."
+   },
+   {
+    "heading": "Home values and ownership rates",
+    "text": "Owner‑occupied homes in Austin have a median value of $555,300, which is $89,400 (19%) above Plano’s $465,900. Despite higher prices, Austin’s owner‑occupancy rate is 43%, compared with Plano’s 57%. Plano’s larger share of owners suggests a more settled, family‑oriented housing market, while Austin’s renters reflect its younger, more transient demographic."
+   },
+   {
+    "heading": "What each city is known for",
+    "text": "Plano is best known as a corporate suburb of Dallas, drawing business travelers to its convention center and shopping destinations like The Shops at Willow Bend and The Shops at Legacy. Austin, the state capital, is famed for its music scene, tech startups, and outdoor amenities such as Lady Bird Lake and the surrounding Hill Country."
+   },
+   {
+    "heading": "Who each city suits best",
+    "text": "Plano is a midsize, family‑oriented suburb that appeals most to established professionals who value financial stability and top‑rated schools. With a 2020‑2024 ACS median household income of $112,253—about 20 % higher than Austin’s—its residents enjoy a comfortable earnings base that supports a home‑ownership rate of 57 % and a median home value of $465,900. The city’s median rent of $1,841 (roughly 20 % of household income) and its relatively high proportion of owner‑occupied units make it attractive to those seeking long‑term investment in a community with a strong commuter link to Dallas, just 17 miles away. The median age of 39.6 underscores a mature population, many of whom are drawn by the presence of corporate headquarters such as Frito‑Lay, Toyota North America, and JCPenney, as well as the city’s business‑travel‑focused visitor profile (about 80 % of guests).  \n\nAustin, by contrast, is a larger, younger, and more culturally vibrant metropolis that resonates with creatives, tech workers, and entrepreneurs who thrive in a fast‑growing urban environment. Its 2020‑2024 ACS median household income of $93,658 is lower than Plano’s, yet the city’s median home value climbs to $555,300—about 19 % higher—reflecting strong demand for property in a market where only 43 % of occupied units are owner‑occupied. Renters pay a median $1,729, representing roughly 22 % of household income, a modest increase over Plano’s ratio but still affordable for many young professionals. With a median age of 34.7 and a population nearing one million—almost three times Plano’s—Austin offers a bustling arts scene, numerous music venues, and a tech ecosystem anchored by companies like Dell and the burgeoning start‑up community. This mix of cultural amenities, higher home values, and a youthful demographic makes Austin the ideal fit for those who prioritize dynamism and opportunity over the quieter, suburban stability that defines Plano."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Is Plano or Austin cheaper to live in?",
+    "a": "Plano’s median rent is slightly higher, but its median income is $18,595 more, making rent about 20% of income versus 22% in Austin. Home values are also lower in Plano, so overall cost of living tends to be more affordable."
+   },
+   {
+    "q": "Which has higher incomes, Plano or Austin?",
+    "a": "Plano leads with a median household income of $112,253, about $18,595 (20%) above Austin’s $93,658."
+   },
+   {
+    "q": "Is rent higher in Plano or Austin?",
+    "a": "The median gross rent in Plano is $1,841 per month, roughly $112 (6%) higher than Austin’s $1,729."
+   },
+   {
+    "q": "Which is better for families, Plano or Austin?",
+    "a": "Plano’s 57% owner‑occupancy rate, higher median income and suburban setting make it a strong choice for families, while Austin’s younger demographic and higher rent-to‑income ratio may suit singles or couples without children."
+   },
+   {
+    "q": "Is Plano or Austin bigger?",
+    "a": "Austin is larger, with an estimated 979,539 residents—about three times Plano’s 290,594."
+   }
+  ],
+  "conclusion": "Plano offers higher earnings, lower home prices and a family‑oriented suburban feel, while Austin provides a larger, younger city with cultural buzz and higher home values. Match your budget, career goals and lifestyle preferences to these core differences to choose the right Texas city for you.",
+  "paragraphs": [
+   "Plano and Austin are two of Texas' most talked‑about places, but they differ sharply in scale, earnings, housing costs and overall feel. Plano offers higher median incomes and lower home prices, while Austin boasts a larger, younger population and a cultural reputation as the state capital. Knowing these contrasts helps you decide which city aligns with your budget and lifestyle.",
+   "Austin’s estimated population of 979,539 dwarfs Plano’s 290,594, making Austin about 688,945 (237%) larger. Austin spreads across 305.1 square miles, while Plano occupies 71.6 square miles. The bigger, more sprawling Austin feels like a major metropolitan hub, whereas Plano’s smaller footprint gives it a suburban atmosphere within the Dallas‑Fort Worth metroplex.",
+   "Plano’s median household income sits at $112,253, about $18,595 (roughly 20 %) higher than Austin’s $93,658.  This earnings advantage is closely tied to the city’s concentration of corporate headquarters—including Frito‑Lay, JCPenney, Pizza Hut and Toyota Motor North America—which draw high‑paying professionals and boost overall wage levels.  With a median age of 39.6 years, Plano’s residents tend to be slightly older and more established in their careers than Austin’s median‑aged 34.7‑year population.\n\nHigher incomes in Plano translate into a modestly higher cost of housing.  The median gross rent is $1,841 per month, about 6 % more than Austin’s $1,729, yet rent still consumes only around 20 % of a typical Plano household’s earnings—slightly lower than Austin’s 22 % share.  Homeownership is also more prevalent in Plano, with 57 % of occupied units owner‑occupied versus 43 % in Austin.  The median value of an owner‑occupied home in Plano is $465,900, which is $89,400 (about 19 %) less than Austin’s $555,300, reflecting the larger supply of suburban single‑family homes in the Dallas‑Fort Worth metro area.\n\nFor families and professionals weighing purchasing power, Plano offers a higher average paycheck and a lower home‑price-to‑income ratio, while still delivering a comfortable rental market.  Austin, by contrast, provides a larger, younger population and higher home values, which may appeal to those prioritizing urban vibrancy over pure purchasing power.",
+   "The median gross rent in Plano is $1,841 per month, about $112 (6%) higher than Austin’s $1,729. When measured against household income, rent consumes roughly 20% of Plano’s median earnings and 22% of Austin’s. Both cities sit near the national affordability benchmark, but Plano’s slightly higher income makes its rent feel a bit more affordable.",
+   "Owner‑occupied homes in Austin have a median value of $555,300, which is $89,400 (19%) above Plano’s $465,900. Despite higher prices, Austin’s owner‑occupancy rate is 43%, compared with Plano’s 57%. Plano’s larger share of owners suggests a more settled, family‑oriented housing market, while Austin’s renters reflect its younger, more transient demographic.",
+   "Plano is best known as a corporate suburb of Dallas, drawing business travelers to its convention center and shopping destinations like The Shops at Willow Bend and The Shops at Legacy. Austin, the state capital, is famed for its music scene, tech startups, and outdoor amenities such as Lady Bird Lake and the surrounding Hill Country.",
+   "Plano is a midsize, family‑oriented suburb that appeals most to established professionals who value financial stability and top‑rated schools. With a 2020‑2024 ACS median household income of $112,253—about 20 % higher than Austin’s—its residents enjoy a comfortable earnings base that supports a home‑ownership rate of 57 % and a median home value of $465,900. The city’s median rent of $1,841 (roughly 20 % of household income) and its relatively high proportion of owner‑occupied units make it attractive to those seeking long‑term investment in a community with a strong commuter link to Dallas, just 17 miles away. The median age of 39.6 underscores a mature population, many of whom are drawn by the presence of corporate headquarters such as Frito‑Lay, Toyota North America, and JCPenney, as well as the city’s business‑travel‑focused visitor profile (about 80 % of guests).  \n\nAustin, by contrast, is a larger, younger, and more culturally vibrant metropolis that resonates with creatives, tech workers, and entrepreneurs who thrive in a fast‑growing urban environment. Its 2020‑2024 ACS median household income of $93,658 is lower than Plano’s, yet the city’s median home value climbs to $555,300—about 19 % higher—reflecting strong demand for property in a market where only 43 % of occupied units are owner‑occupied. Renters pay a median $1,729, representing roughly 22 % of household income, a modest increase over Plano’s ratio but still affordable for many young professionals. With a median age of 34.7 and a population nearing one million—almost three times Plano’s—Austin offers a bustling arts scene, numerous music venues, and a tech ecosystem anchored by companies like Dell and the burgeoning start‑up community. This mix of cultural amenities, higher home values, and a youthful demographic makes Austin the ideal fit for those who prioritize dynamism and opportunity over the quieter, suburban stability that defines Plano.",
+   "Plano’s median rent is slightly higher, but its median income is $18,595 more, making rent about 20% of income versus 22% in Austin. Home values are also lower in Plano, so overall cost of living tends to be more affordable.",
+   "Plano leads with a median household income of $112,253, about $18,595 (20%) above Austin’s $93,658.",
+   "The median gross rent in Plano is $1,841 per month, roughly $112 (6%) higher than Austin’s $1,729.",
+   "Plano’s 57% owner‑occupancy rate, higher median income and suburban setting make it a strong choice for families, while Austin’s younger demographic and higher rent-to‑income ratio may suit singles or couples without children.",
+   "Austin is larger, with an estimated 979,539 residents—about three times Plano’s 290,594.",
+   "Plano offers higher earnings, lower home prices and a family‑oriented suburban feel, while Austin provides a larger, younger city with cultural buzz and higher home values. Match your budget, career goals and lifestyle preferences to these core differences to choose the right Texas city for you."
+  ],
+  "sources": [
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   },
+   {
+    "title": "Wikipedia: Plano, Texas",
+    "url": "https://en.wikipedia.org/wiki/Plano%2C_Texas"
+   },
+   {
+    "title": "Wikivoyage: Plano",
+    "url": "https://en.wikivoyage.org/wiki/Plano"
+   },
+   {
+    "title": "Wikipedia: Austin, Texas",
+    "url": "https://en.wikipedia.org/wiki/Austin%2C_Texas"
+   },
+   {
+    "title": "Wikivoyage: Austin",
+    "url": "https://en.wikivoyage.org/wiki/Austin"
+   }
+  ],
+  "researched": true,
+  "date": "Oct 24, 2026",
+  "iso": "2026-10-24",
+  "ts": 1792855908.830113,
+  "image": "/img/plano-vs-austin-which-texas-city-fits-your-lifestyle.jpg",
+  "img_v": 2
  }
 ]
