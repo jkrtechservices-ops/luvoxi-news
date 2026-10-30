@@ -3623,5 +3623,109 @@
   "ts": 1793313228.385194,
   "image": "/img/frisco-vs-houston-which-city-is-right-for-you.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:compare:Frisco, TX|San Antonio",
+  "slug": "frisco-vs-san-antonio-which-city-is-right-for-you",
+  "city": "Frisco, TX",
+  "title": "Frisco vs San Antonio: Which City Is Right for You?",
+  "summary": "Compare Frisco and San Antonio on size, income, rent, home values, affordability and lifestyle to decide where to live.",
+  "intro": "Frisco and San Antonio offer very different living experiences. Frisco is a fast‑growing, affluent suburb of Dallas‑Fort Worth with a median household income of $150,212, while San Antonio is a large, historic city with a median income of $65,056. Knowing how each city stacks up on population, housing costs and overall vibe helps you choose the right place to call home.",
+  "bullets": [
+   "Frisco is much smaller but far wealthier.",
+   "San Antonio has lower rent and home prices.",
+   "Home ownership is higher in Frisco.",
+   "Each city suits distinct lifestyle preferences."
+  ],
+  "sections": [
+   {
+    "heading": "Population and Physical Size",
+    "text": "Frisco’s population sits at 219,304, covering 62.4 square miles. By contrast, San Antonio is home to 1,479,835 residents spread across 465.4 square miles, making it about 575% larger in population and roughly seven times bigger in land area. Frisco’s compact footprint means shorter commutes and a more suburban feel, while San Antonio’s extensive size supports a wider variety of neighborhoods, commercial districts and cultural zones.\n\nBoth cities are located in Texas, but Frisco lies in Collin and Denton counties within the Dallas‑Fort Worth metroplex, about 25 miles from major airports. San Antonio sits in southern Texas as the county seat of Bexar County, roughly 75 miles southwest of Austin and 150 miles north of the Mexican border. The differing scales affect everything from traffic patterns to the breadth of services available."
+   },
+   {
+    "heading": "Income Levels and What They Mean",
+    "text": "The median household income in Frisco is $150,212, more than double the $65,056 median in San Antonio—a difference of $85,156, or about 131% higher. This income gap translates into greater purchasing power for Frisco residents, who often work in high‑paying sectors linked to the Dallas‑Fort Worth economy. San Antonio’s lower median income reflects a broader mix of occupations, including government, healthcare and tourism.\n\nHigher incomes in Frisco also support a larger tax base, which can fund amenities such as parks, libraries and community programs. Meanwhile, San Antonio’s more modest income level can make everyday expenses feel lighter for residents, especially when combined with lower housing costs."
+   },
+   {
+    "heading": "Rent and Home Ownership Costs",
+    "text": "Rent in Frisco has a median gross amount of $2,014 per month, which is $690, or about 52%, higher than San Antonio’s median rent of $1,324. Despite the higher rent, Frisco’s rent‑to‑income ratio sits at roughly 16% of median household income, while San Antonio’s ratio is about 24%. In other words, renters in Frisco spend a smaller share of their earnings on housing than those in San Antonio.\n\nHome values show an even larger gap. The median value of owner‑occupied homes in Frisco is $642,100, $406,400, or about 172% higher than San Antonio’s median of $235,700. Homeownership is also more common in Frisco, with 66% of occupied housing units owner‑occupied versus 52% in San Antonio. These figures suggest that while buying a home in Frisco requires a significantly larger investment, a higher proportion of residents do own their homes."
+   },
+   {
+    "heading": "Affordability Overview",
+    "text": "Affordability hinges on both income and costs. Frisco’s residents enjoy higher salaries that offset the steep rent and home prices, keeping the rent‑to‑income ratio relatively low. However, the absolute cost of housing—especially buying—remains a barrier for many.\n\nSan Antonio offers a more budget‑friendly environment. Lower rent and home values mean that even with a median income of $65,056, residents can afford a larger portion of their earnings toward housing, though the rent‑to‑income ratio is higher. The city’s 52% owner‑occupied rate indicates that many still achieve homeownership, albeit at lower price points.\n\nOverall, Frisco feels more expensive but is cushioned by higher wages, while San Antonio feels cheaper but stretches a larger share of household income."
+   },
+   {
+    "heading": "What Each City Is Known For",
+    "text": "Frisco has earned a reputation as a rapidly growing, family‑oriented suburb. It was the fastest‑growing city in the United States in 2017 and from 2000 to 2009, and it has maintained Tree City USA status since 2003. Its location within the Dallas‑Fort Worth metroplex provides easy access to major airports and a strong corporate presence.\n\nSan Antonio is celebrated for its deep historical roots, dating back to a Spanish mission founded in 1718 and its status as the first chartered civil settlement in present‑day Texas. The city’s culture blends Mexican heritage with modern Texas life, and its larger metropolitan area of 2.76 million residents supports a diverse economy and a rich arts scene. The Edwards Aquifer supplies the city’s water, underscoring its unique geographic character."
+   },
+   {
+    "heading": "Who Each City Suits Best",
+    "text": "Frisco appeals to high‑earning professionals, tech and finance workers, and families seeking top‑tier amenities, newer housing stock and a suburban layout. Its higher homeownership rate and strong income base make it attractive for those looking to invest in property and enjoy a community with extensive parks and schools.\n\nSan Antonio fits individuals and families who prioritize cost‑of‑living savings, cultural diversity and a larger urban environment. The lower rent and home prices are ideal for first‑time buyers, retirees or anyone who wants more square footage for less money. Its historic districts, culinary scene and proximity to the Mexican border add a distinctive lifestyle flavor.\n\nChoosing between the two depends on whether you value higher earnings and newer suburban comforts (Frisco) or a larger, historically rich city with more affordable housing (San Antonio)."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Is Frisco or San Antonio cheaper to live in?",
+    "a": "San Antonio is cheaper overall. Its median rent is $1,324 and median home value is $235,700, both lower than Frisco’s $2,014 rent and $642,100 home value."
+   },
+   {
+    "q": "Which has higher incomes, Frisco or San Antonio?",
+    "a": "Frisco has higher incomes. The median household income is $150,212, compared with San Antonio’s $65,056."
+   },
+   {
+    "q": "Is rent higher in Frisco or San Antonio?",
+    "a": "Rent is higher in Frisco. The median gross rent is $2,014 per month, while San Antonio’s median rent is $1,324."
+   },
+   {
+    "q": "Which is better for families, Frisco or San Antonio?",
+    "a": "Frisco often suits families seeking higher incomes, newer suburbs and a higher homeownership rate. San Antonio works for families wanting lower housing costs and a larger city atmosphere."
+   },
+   {
+    "q": "Is Frisco or San Antonio bigger?",
+    "a": "San Antonio is much bigger. It has a population of 1,479,835 and covers 465.4 square miles, versus Frisco’s 219,304 residents and 62.4 square miles."
+   }
+  ],
+  "conclusion": "Frisco offers wealth, newer suburban living and a high homeownership rate at a premium price, while San Antonio provides affordability, cultural depth and a larger urban setting. Weigh your income potential, housing budget and lifestyle preferences to decide which city aligns with your next chapter.",
+  "paragraphs": [
+   "Frisco and San Antonio offer very different living experiences. Frisco is a fast‑growing, affluent suburb of Dallas‑Fort Worth with a median household income of $150,212, while San Antonio is a large, historic city with a median income of $65,056. Knowing how each city stacks up on population, housing costs and overall vibe helps you choose the right place to call home.",
+   "Frisco’s population sits at 219,304, covering 62.4 square miles. By contrast, San Antonio is home to 1,479,835 residents spread across 465.4 square miles, making it about 575% larger in population and roughly seven times bigger in land area. Frisco’s compact footprint means shorter commutes and a more suburban feel, while San Antonio’s extensive size supports a wider variety of neighborhoods, commercial districts and cultural zones.\n\nBoth cities are located in Texas, but Frisco lies in Collin and Denton counties within the Dallas‑Fort Worth metroplex, about 25 miles from major airports. San Antonio sits in southern Texas as the county seat of Bexar County, roughly 75 miles southwest of Austin and 150 miles north of the Mexican border. The differing scales affect everything from traffic patterns to the breadth of services available.",
+   "The median household income in Frisco is $150,212, more than double the $65,056 median in San Antonio—a difference of $85,156, or about 131% higher. This income gap translates into greater purchasing power for Frisco residents, who often work in high‑paying sectors linked to the Dallas‑Fort Worth economy. San Antonio’s lower median income reflects a broader mix of occupations, including government, healthcare and tourism.\n\nHigher incomes in Frisco also support a larger tax base, which can fund amenities such as parks, libraries and community programs. Meanwhile, San Antonio’s more modest income level can make everyday expenses feel lighter for residents, especially when combined with lower housing costs.",
+   "Rent in Frisco has a median gross amount of $2,014 per month, which is $690, or about 52%, higher than San Antonio’s median rent of $1,324. Despite the higher rent, Frisco’s rent‑to‑income ratio sits at roughly 16% of median household income, while San Antonio’s ratio is about 24%. In other words, renters in Frisco spend a smaller share of their earnings on housing than those in San Antonio.\n\nHome values show an even larger gap. The median value of owner‑occupied homes in Frisco is $642,100, $406,400, or about 172% higher than San Antonio’s median of $235,700. Homeownership is also more common in Frisco, with 66% of occupied housing units owner‑occupied versus 52% in San Antonio. These figures suggest that while buying a home in Frisco requires a significantly larger investment, a higher proportion of residents do own their homes.",
+   "Affordability hinges on both income and costs. Frisco’s residents enjoy higher salaries that offset the steep rent and home prices, keeping the rent‑to‑income ratio relatively low. However, the absolute cost of housing—especially buying—remains a barrier for many.\n\nSan Antonio offers a more budget‑friendly environment. Lower rent and home values mean that even with a median income of $65,056, residents can afford a larger portion of their earnings toward housing, though the rent‑to‑income ratio is higher. The city’s 52% owner‑occupied rate indicates that many still achieve homeownership, albeit at lower price points.\n\nOverall, Frisco feels more expensive but is cushioned by higher wages, while San Antonio feels cheaper but stretches a larger share of household income.",
+   "Frisco has earned a reputation as a rapidly growing, family‑oriented suburb. It was the fastest‑growing city in the United States in 2017 and from 2000 to 2009, and it has maintained Tree City USA status since 2003. Its location within the Dallas‑Fort Worth metroplex provides easy access to major airports and a strong corporate presence.\n\nSan Antonio is celebrated for its deep historical roots, dating back to a Spanish mission founded in 1718 and its status as the first chartered civil settlement in present‑day Texas. The city’s culture blends Mexican heritage with modern Texas life, and its larger metropolitan area of 2.76 million residents supports a diverse economy and a rich arts scene. The Edwards Aquifer supplies the city’s water, underscoring its unique geographic character.",
+   "Frisco appeals to high‑earning professionals, tech and finance workers, and families seeking top‑tier amenities, newer housing stock and a suburban layout. Its higher homeownership rate and strong income base make it attractive for those looking to invest in property and enjoy a community with extensive parks and schools.\n\nSan Antonio fits individuals and families who prioritize cost‑of‑living savings, cultural diversity and a larger urban environment. The lower rent and home prices are ideal for first‑time buyers, retirees or anyone who wants more square footage for less money. Its historic districts, culinary scene and proximity to the Mexican border add a distinctive lifestyle flavor.\n\nChoosing between the two depends on whether you value higher earnings and newer suburban comforts (Frisco) or a larger, historically rich city with more affordable housing (San Antonio).",
+   "San Antonio is cheaper overall. Its median rent is $1,324 and median home value is $235,700, both lower than Frisco’s $2,014 rent and $642,100 home value.",
+   "Frisco has higher incomes. The median household income is $150,212, compared with San Antonio’s $65,056.",
+   "Rent is higher in Frisco. The median gross rent is $2,014 per month, while San Antonio’s median rent is $1,324.",
+   "Frisco often suits families seeking higher incomes, newer suburbs and a higher homeownership rate. San Antonio works for families wanting lower housing costs and a larger city atmosphere.",
+   "San Antonio is much bigger. It has a population of 1,479,835 and covers 465.4 square miles, versus Frisco’s 219,304 residents and 62.4 square miles.",
+   "Frisco offers wealth, newer suburban living and a high homeownership rate at a premium price, while San Antonio provides affordability, cultural depth and a larger urban setting. Weigh your income potential, housing budget and lifestyle preferences to decide which city aligns with your next chapter."
+  ],
+  "sources": [
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   },
+   {
+    "title": "Wikipedia: Frisco, Texas",
+    "url": "https://en.wikipedia.org/wiki/Frisco%2C_Texas"
+   },
+   {
+    "title": "Wikipedia: San Antonio",
+    "url": "https://en.wikipedia.org/wiki/San_Antonio"
+   },
+   {
+    "title": "Wikivoyage: San Antonio",
+    "url": "https://en.wikivoyage.org/wiki/San_Antonio"
+   }
+  ],
+  "researched": true,
+  "date": "Oct 30, 2026",
+  "iso": "2026-10-30",
+  "ts": 1793362613.557811,
+  "image": "/img/frisco-vs-san-antonio-which-city-is-right-for-you.jpg",
+  "img_v": 2
  }
 ]
