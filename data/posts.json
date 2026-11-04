@@ -4415,5 +4415,103 @@
   "ts": 1793747139.8419938,
   "image": "/img/median-income-in-chandler-az-how-much-do-residents-earn.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "trend",
+  "key": "trend:does-how-it-mileage-tax-work",
+  "slug": "mileage-tax-california-how-does-it-work-a-clear-guide",
+  "city": "USA",
+  "title": "Mileage tax California how does it work – a clear guide",
+  "summary": "Learn how a mileage tax in California could work, who supports it, and what costs drivers might face.",
+  "intro": "A mileage tax in California would charge drivers based on the number of miles they travel instead of fuel purchases. As the governor's race heats up, candidates and lawmakers are debating whether this system could replace declining gas tax revenue and fund road repairs. The idea is gaining attention, but opinions differ on its cost and fairness.",
+  "bullets": [
+   "Mileage tax ties fees to miles driven, not fuel use",
+   "Democrats and Republicans disagree on its impact",
+   "Estimates range from six to nine cents per mile",
+   "Legislation is still in study phases"
+  ],
+  "sections": [
+   {
+    "heading": "Why a mileage tax is being considered in California",
+    "text": "California’s gas tax has lost purchasing power as more drivers switch to electric or hybrid vehicles. Lawmakers say a mileage‑based fee could close the funding gap for road repairs. Assemblywoman Lori Wilson has pushed for a study of such a system, arguing that miles driven are a more stable revenue source than gallons of gasoline."
+   },
+   {
+    "heading": "What the gubernatorial candidates say about mileage tax California how does it work",
+    "text": "Democratic candidate Xavier Becerra told reporters that “everything should be on the table,” signaling openness to a vehicle‑miles‑traveled tax. In contrast, Republican candidate Steve Hilton warned that most cars on California roads still run on gas and diesel, and that a mileage tax would add significant costs for drivers.\n\nBoth positions reflect the broader debate: whether to shift from a fuel‑based model to one based on road usage."
+   },
+   {
+    "heading": "Potential cost to drivers",
+    "text": "Some Republican state lawmakers have estimated that a mileage tax could cost drivers between six and nine cents per mile. For the average driver, that could add up to $1,000 annually. The range reflects different assumptions about mileage and rates, but it gives a sense of the possible financial impact if the tax were implemented."
+   },
+   {
+    "heading": "How a mileage tax would be collected",
+    "text": "Under a typical vehicle‑miles‑traveled system, drivers would report the number of miles they travel each year, often through an online portal or a device installed in the vehicle. The reported miles would be multiplied by the approved rate to calculate the fee. This method aims to charge all drivers proportionally, regardless of fuel type."
+   },
+   {
+    "heading": "Next steps for legislation",
+    "text": "As of November 2026 the mileage‑tax proposal remains in the research phase, but the political landscape surrounding it has already shifted dramatically. The upcoming gubernatorial race has turned the issue into a flashpoint, with Democratic candidate Xavier Becerra stating that “everything should be on the table” when asked whether a vehicle‑miles‑traveled (VMT) fee could help close the widening gap left by the dwindling gasoline tax. His remarks have prompted both supporters and skeptics to press legislators for concrete data, accelerating the timeline for formal studies.\n\nAssemblywoman Lori Wilson, a longtime advocate for modernizing California’s transportation funding, is leading the legislative effort to commission a comprehensive feasibility analysis. Her bill directs the Department of Transportation to collect statewide mileage data, model revenue scenarios, and evaluate equity impacts across income groups, urban versus rural drivers, and electric‑vehicle owners. The study is slated to produce a detailed report by mid‑2027, which will then be debated in committee hearings.\n\nRepublican contenders are already shaping the narrative. Steve Hilton, the GOP gubernatorial hopeful, has warned that a mileage tax could impose “significant costs for drivers,” emphasizing that the majority of California’s fleet still runs on gasoline or diesel. Several Republican state lawmakers have cited independent estimates suggesting a VMT charge of six to nine cents per mile—an amount that could translate into roughly $1,000 in extra expenses for the average driver each year.\n\nIf the data support the concept, the next legislative hurdle will be a full‑session vote in both the Assembly and Senate, followed by a mandatory public hearing where stakeholders—ranging from trucking associations to environmental groups—can present testimony. Only after clearing those procedural steps could the governor sign the mileage‑tax law into effect, potentially reshaping how Californians fund road maintenance for the first time in decades."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Will electric car owners have to pay a mileage tax?",
+    "a": "Yes. Because the tax is based on miles driven, not fuel purchased, electric vehicles would still owe a fee for road use."
+   },
+   {
+    "q": "How is the mileage rate determined?",
+    "a": "Lawmakers would set a per‑mile rate, often based on projected road‑maintenance costs and estimated total vehicle miles driven statewide."
+   },
+   {
+    "q": "Can drivers dispute their mileage reports?",
+    "a": "Most proposals include an appeals process where drivers can challenge a mileage assessment if they believe it is inaccurate."
+   },
+   {
+    "q": "What happens to the revenue from a mileage tax?",
+    "a": "Revenue would be earmarked for road repairs and infrastructure projects, aiming to replace declining gas‑tax funds."
+   }
+  ],
+  "conclusion": "A mileage tax in California could shift road‑funding from fuel sales to actual road usage. While supporters see it as a stable revenue source, opponents warn of added costs for drivers. Keep an eye on legislative updates to see how this proposal evolves.",
+  "paragraphs": [
+   "A mileage tax in California would charge drivers based on the number of miles they travel instead of fuel purchases. As the governor's race heats up, candidates and lawmakers are debating whether this system could replace declining gas tax revenue and fund road repairs. The idea is gaining attention, but opinions differ on its cost and fairness.",
+   "California’s gas tax has lost purchasing power as more drivers switch to electric or hybrid vehicles. Lawmakers say a mileage‑based fee could close the funding gap for road repairs. Assemblywoman Lori Wilson has pushed for a study of such a system, arguing that miles driven are a more stable revenue source than gallons of gasoline.",
+   "Democratic candidate Xavier Becerra told reporters that “everything should be on the table,” signaling openness to a vehicle‑miles‑traveled tax. In contrast, Republican candidate Steve Hilton warned that most cars on California roads still run on gas and diesel, and that a mileage tax would add significant costs for drivers.\n\nBoth positions reflect the broader debate: whether to shift from a fuel‑based model to one based on road usage.",
+   "Some Republican state lawmakers have estimated that a mileage tax could cost drivers between six and nine cents per mile. For the average driver, that could add up to $1,000 annually. The range reflects different assumptions about mileage and rates, but it gives a sense of the possible financial impact if the tax were implemented.",
+   "Under a typical vehicle‑miles‑traveled system, drivers would report the number of miles they travel each year, often through an online portal or a device installed in the vehicle. The reported miles would be multiplied by the approved rate to calculate the fee. This method aims to charge all drivers proportionally, regardless of fuel type.",
+   "As of November 2026 the mileage‑tax proposal remains in the research phase, but the political landscape surrounding it has already shifted dramatically. The upcoming gubernatorial race has turned the issue into a flashpoint, with Democratic candidate Xavier Becerra stating that “everything should be on the table” when asked whether a vehicle‑miles‑traveled (VMT) fee could help close the widening gap left by the dwindling gasoline tax. His remarks have prompted both supporters and skeptics to press legislators for concrete data, accelerating the timeline for formal studies.\n\nAssemblywoman Lori Wilson, a longtime advocate for modernizing California’s transportation funding, is leading the legislative effort to commission a comprehensive feasibility analysis. Her bill directs the Department of Transportation to collect statewide mileage data, model revenue scenarios, and evaluate equity impacts across income groups, urban versus rural drivers, and electric‑vehicle owners. The study is slated to produce a detailed report by mid‑2027, which will then be debated in committee hearings.\n\nRepublican contenders are already shaping the narrative. Steve Hilton, the GOP gubernatorial hopeful, has warned that a mileage tax could impose “significant costs for drivers,” emphasizing that the majority of California’s fleet still runs on gasoline or diesel. Several Republican state lawmakers have cited independent estimates suggesting a VMT charge of six to nine cents per mile—an amount that could translate into roughly $1,000 in extra expenses for the average driver each year.\n\nIf the data support the concept, the next legislative hurdle will be a full‑session vote in both the Assembly and Senate, followed by a mandatory public hearing where stakeholders—ranging from trucking associations to environmental groups—can present testimony. Only after clearing those procedural steps could the governor sign the mileage‑tax law into effect, potentially reshaping how Californians fund road maintenance for the first time in decades.",
+   "Yes. Because the tax is based on miles driven, not fuel purchased, electric vehicles would still owe a fee for road use.",
+   "Lawmakers would set a per‑mile rate, often based on projected road‑maintenance costs and estimated total vehicle miles driven statewide.",
+   "Most proposals include an appeals process where drivers can challenge a mileage assessment if they believe it is inaccurate.",
+   "Revenue would be earmarked for road repairs and infrastructure projects, aiming to replace declining gas‑tax funds.",
+   "A mileage tax in California could shift road‑funding from fuel sales to actual road usage. While supporters see it as a stable revenue source, opponents warn of added costs for drivers. Keep an eye on legislative updates to see how this proposal evolves."
+  ],
+  "sources": [
+   {
+    "title": "nypost.com",
+    "url": "https://nypost.com/2026/10/30/us-news/california-mileage-tax-explained-how-sacramento-could-track-drivers-and-charge-by-the-mile"
+   },
+   {
+    "title": "kfiam640.iheart.com",
+    "url": "https://kfiam640.iheart.com/content/2026-10-30-debate-over-mileage-tax-surfaces-in-california-governors-race"
+   },
+   {
+    "title": "hoodline.com",
+    "url": "https://hoodline.com/2026/10/becerra-says-pay-per-mile-fee-on-the-table-to-fix-california-s-crumbling-roads"
+   },
+   {
+    "title": "nypost.com",
+    "url": "https://nypost.com/2026/10/29/us-news/steve-hilton-rips-xavier-becerras-proposed-mileage-tax-on-drivers"
+   },
+   {
+    "title": "californiaglobe.com",
+    "url": "https://californiaglobe.com/fl/becerra-open-to-mileage-tax-after-newsoms-spending-spree"
+   }
+  ],
+  "researched": true,
+  "date": "Nov 04, 2026",
+  "iso": "2026-11-04",
+  "ts": 1793768799.4166543,
+  "image": "/img/mileage-tax-california-how-does-it-work-a-clear-guide.jpg",
+  "img_v": 2
  }
 ]
