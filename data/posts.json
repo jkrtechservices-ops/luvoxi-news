@@ -5004,5 +5004,88 @@
   "ts": 1794027336.957556,
   "image": "/img/katy-vs-san-antonio-which-city-is-right-for-you.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:Chicago:income",
+  "slug": "median-income-in-chicago-how-much-do-residents-earn",
+  "city": "Chicago",
+  "title": "Median Income in Chicago: How Much Do Residents Earn?",
+  "summary": "Find Chicago's median household income, rent, home values, and population stats to understand what residents earn.",
+  "intro": "Chicago residents earn a median household income of $77,902 per year, according to the 2020-2024 American Community Survey. This figure reflects the midpoint of all household earnings in the city, meaning half of households earn more and half earn less. Knowing this number helps you gauge cost of living, budgeting needs, and how Chicago compares to other U.S. metros.",
+  "bullets": [
+   "Median household income: $77,902",
+   "Median rent: $1,440 per month",
+   "Owner-occupied homes: 46% of units",
+   "Median home value: $334,100",
+   "Population: 2,711,226"
+  ],
+  "sections": [
+   {
+    "heading": "How Chicago's Median Income Stacks Up",
+    "text": "The median household income of $77,902 places Chicago above the national median but below the highest‑earning metros like San Francisco or Washington, D.C. This figure comes from the U.S. Census Bureau's 2020-2024 ACS 5‑year estimates, which blend data from five years to smooth out short‑term fluctuations. For families, this median means that a typical household can afford moderate expenses, though individual experiences vary widely based on job sector, education, and neighborhood."
+   },
+   {
+    "heading": "What the Median Income Means for Housing Costs",
+    "text": "Housing is the biggest budget item for most Chicagoans. The median gross rent is $1,440 per month, which translates to roughly 22% of the median household income. Owner‑occupied homes have a median value of $334,100, and about 46% of occupied housing units are owner‑occupied. These numbers suggest that renting remains common, especially for younger residents, while homeownership is attainable for many but still requires a sizable mortgage or down payment."
+   },
+   {
+    "heading": "Population Size and Its Impact on Earnings",
+    "text": "Chicago’s estimated population of 2,711,226 people, according to the U.S. Census Bureau’s 2020‑2024 American Community Survey (ACS) 5‑year estimates, creates a labor market that is both deep and broad. With more than two and a half million residents, the city can sustain a wide spectrum of industries—from the global finance hub on the Loop to the advanced manufacturing corridors on the South Side, the world‑renowned medical and research institutions in the Near North, and the expansive network of public and private schools and universities. This industrial diversity translates into a steady flow of jobs at many skill levels, which helps anchor the city’s median household income at $77,902 per year.\n\nThe demographic profile further shapes earnings potential. The median age of Chicagoans is just 35.8 years, indicating a relatively young workforce that is often in the early or mid‑stages of their careers. Younger workers tend to earn less than more seasoned professionals, which tempers upward pressure on the median income despite the presence of high‑paying sectors such as finance and technology. In addition, housing dynamics reflect the income picture: the median gross rent stands at $1,440 per month, while the median value of owner‑occupied homes is $334,100, and only about 46% of occupied housing units are owner‑occupied. These housing costs, combined with a youthful labor pool, mean that while Chicago’s sizable population fuels a robust job market, the median earnings figure remains moderated by the age and housing affordability realities of its residents."
+   },
+   {
+    "heading": "Age, Household Composition, and Income",
+    "text": "The median age of Chicago residents—35.8 years, according to the 2020‑2024 American Community Survey—captures a city that is simultaneously a launchpad for young professionals, a home for growing families, and a retirement destination for older adults. This age distribution creates a pronounced income gradient. Households headed by residents in their twenties and early thirties often consist of single earners or entry‑level workers, which drags the overall median household income downward. In contrast, the city’s sizable cohort of dual‑income families, many of whom are in their thirties and forties, pushes the median income upward, helping Chicago reach a median household income of $77,902 per year—well above the national median.\n\nHousing tenure further sharpens these dynamics. Approximately 46 % of occupied housing units are owner‑occupied, and the median value of those homes stands at $334,100. Homeownership typically signals greater financial stability, as owners are more likely to have accumulated equity and possess the creditworthiness to secure higher‑paying jobs. Renters, who make up the remaining 54 % of the market, face a median gross rent of $1,440 per month, which can constrain disposable income and limit upward mobility for younger or lower‑earning households.\n\nTogether, age, household composition, and housing tenure explain why Chicago’s median income is buoyed by middle‑aged, dual‑earner families and a robust base of homeowners, while still reflecting the earnings challenges faced by younger, renter‑dominated segments of the population."
+   },
+   {
+    "heading": "Using Median Income Data for Personal Planning",
+    "text": "When budgeting for a move or evaluating a job offer in Chicago, use the $77,902 median as a baseline. Compare your prospective salary to this figure to gauge purchasing power. Factor in the $1,440 median rent or the $334,100 median home value when estimating housing costs. Remember that the median does not capture extremes; your experience may be higher or lower depending on industry, education, and neighborhood."
+   }
+  ],
+  "faq": [
+   {
+    "q": "Is Chicago's median income higher than the national average?",
+    "a": "Yes. Chicago's median household income of $77,902 exceeds the U.S. national median, which is lower according to recent Census data."
+   },
+   {
+    "q": "How much of my income should go to rent in Chicago?",
+    "a": "A common guideline is to spend no more than 30% of income on housing. With a median rent of $1,440, that equals about 22% of the median household income."
+   },
+   {
+    "q": "What percentage of Chicago residents own their homes?",
+    "a": "About 46% of occupied housing units in Chicago are owner‑occupied, according to the 2020-2024 ACS estimates."
+   },
+   {
+    "q": "How does the median home value compare to rent?",
+    "a": "The median value of owner‑occupied homes is $334,100, while the median monthly rent is $1,440. This shows a substantial gap between buying and renting costs."
+   }
+  ],
+  "conclusion": "Chicago's median household income of $77,902 provides a useful benchmark for anyone assessing cost of living, housing affordability, or job prospects in the city. Pair this figure with the median rent, home values, and population data to make informed financial decisions.",
+  "paragraphs": [
+   "Chicago residents earn a median household income of $77,902 per year, according to the 2020-2024 American Community Survey. This figure reflects the midpoint of all household earnings in the city, meaning half of households earn more and half earn less. Knowing this number helps you gauge cost of living, budgeting needs, and how Chicago compares to other U.S. metros.",
+   "The median household income of $77,902 places Chicago above the national median but below the highest‑earning metros like San Francisco or Washington, D.C. This figure comes from the U.S. Census Bureau's 2020-2024 ACS 5‑year estimates, which blend data from five years to smooth out short‑term fluctuations. For families, this median means that a typical household can afford moderate expenses, though individual experiences vary widely based on job sector, education, and neighborhood.",
+   "Housing is the biggest budget item for most Chicagoans. The median gross rent is $1,440 per month, which translates to roughly 22% of the median household income. Owner‑occupied homes have a median value of $334,100, and about 46% of occupied housing units are owner‑occupied. These numbers suggest that renting remains common, especially for younger residents, while homeownership is attainable for many but still requires a sizable mortgage or down payment.",
+   "Chicago’s estimated population of 2,711,226 people, according to the U.S. Census Bureau’s 2020‑2024 American Community Survey (ACS) 5‑year estimates, creates a labor market that is both deep and broad. With more than two and a half million residents, the city can sustain a wide spectrum of industries—from the global finance hub on the Loop to the advanced manufacturing corridors on the South Side, the world‑renowned medical and research institutions in the Near North, and the expansive network of public and private schools and universities. This industrial diversity translates into a steady flow of jobs at many skill levels, which helps anchor the city’s median household income at $77,902 per year.\n\nThe demographic profile further shapes earnings potential. The median age of Chicagoans is just 35.8 years, indicating a relatively young workforce that is often in the early or mid‑stages of their careers. Younger workers tend to earn less than more seasoned professionals, which tempers upward pressure on the median income despite the presence of high‑paying sectors such as finance and technology. In addition, housing dynamics reflect the income picture: the median gross rent stands at $1,440 per month, while the median value of owner‑occupied homes is $334,100, and only about 46% of occupied housing units are owner‑occupied. These housing costs, combined with a youthful labor pool, mean that while Chicago’s sizable population fuels a robust job market, the median earnings figure remains moderated by the age and housing affordability realities of its residents.",
+   "The median age of Chicago residents—35.8 years, according to the 2020‑2024 American Community Survey—captures a city that is simultaneously a launchpad for young professionals, a home for growing families, and a retirement destination for older adults. This age distribution creates a pronounced income gradient. Households headed by residents in their twenties and early thirties often consist of single earners or entry‑level workers, which drags the overall median household income downward. In contrast, the city’s sizable cohort of dual‑income families, many of whom are in their thirties and forties, pushes the median income upward, helping Chicago reach a median household income of $77,902 per year—well above the national median.\n\nHousing tenure further sharpens these dynamics. Approximately 46 % of occupied housing units are owner‑occupied, and the median value of those homes stands at $334,100. Homeownership typically signals greater financial stability, as owners are more likely to have accumulated equity and possess the creditworthiness to secure higher‑paying jobs. Renters, who make up the remaining 54 % of the market, face a median gross rent of $1,440 per month, which can constrain disposable income and limit upward mobility for younger or lower‑earning households.\n\nTogether, age, household composition, and housing tenure explain why Chicago’s median income is buoyed by middle‑aged, dual‑earner families and a robust base of homeowners, while still reflecting the earnings challenges faced by younger, renter‑dominated segments of the population.",
+   "When budgeting for a move or evaluating a job offer in Chicago, use the $77,902 median as a baseline. Compare your prospective salary to this figure to gauge purchasing power. Factor in the $1,440 median rent or the $334,100 median home value when estimating housing costs. Remember that the median does not capture extremes; your experience may be higher or lower depending on industry, education, and neighborhood.",
+   "Yes. Chicago's median household income of $77,902 exceeds the U.S. national median, which is lower according to recent Census data.",
+   "A common guideline is to spend no more than 30% of income on housing. With a median rent of $1,440, that equals about 22% of the median household income.",
+   "About 46% of occupied housing units in Chicago are owner‑occupied, according to the 2020-2024 ACS estimates.",
+   "The median value of owner‑occupied homes is $334,100, while the median monthly rent is $1,440. This shows a substantial gap between buying and renting costs.",
+   "Chicago's median household income of $77,902 provides a useful benchmark for anyone assessing cost of living, housing affordability, or job prospects in the city. Pair this figure with the median rent, home values, and population data to make informed financial decisions."
+  ],
+  "sources": [
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   }
+  ],
+  "researched": true,
+  "date": "Nov 07, 2026",
+  "iso": "2026-11-07",
+  "ts": 1794055444.0050187,
+  "image": "/img/median-income-in-chicago-how-much-do-residents-earn.jpg",
+  "img_v": 2
  }
 ]
