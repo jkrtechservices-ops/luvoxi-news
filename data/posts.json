@@ -7864,5 +7864,96 @@
   "ts": 1795070439.040551,
   "image": "/img/round-rock-vs-houston-size-cost-and-lifestyle-comparison.jpg",
   "img_v": 2
+ },
+ {
+  "v": 6,
+  "kind": "guide",
+  "key": "guide:Los Angeles:living",
+  "slug": "is-los-angeles-a-good-place-to-live-pros-and-cons",
+  "city": "Los Angeles",
+  "title": "Is Los Angeles a Good Place to Live? Pros and Cons",
+  "summary": "Explore Los Angeles' population, cost of living, traffic, climate and culture to decide if it’s a good place to call home.",
+  "intro": "Los Angeles is the second‑most populous city in the United States with about 3.87 million residents. It offers a Mediterranean climate, world‑class entertainment, and a diverse economy, but high housing costs and notorious traffic can be challenging. Whether the city’s advantages outweigh its drawbacks depends on your priorities, budget, and lifestyle.",
+  "bullets": [
+   "Population exceeds 3.8 million, ranking second nationwide.",
+   "Median household income is $81,939; rent averages $1,933.",
+   "Owner‑occupied homes median at $921,200; only 36% ownership.",
+   "Drivers spend an extra 92 hours in traffic each year.",
+   "Mediterranean climate and beaches shape daily life."
+  ],
+  "sections": [
+   {
+    "heading": "Population size and national ranking",
+    "text": "Los Angeles had an estimated population of 3,857,263 in the 2020‑2024 ACS 5‑year estimates, making it the most populous city in California and the second‑most populous city in the United States. The broader metropolitan area reaches 12.9 million people, while the combined statistical area of Greater Los Angeles tops 18 million. This scale creates a dynamic labor market and cultural scene, but also contributes to density‑related pressures on housing and infrastructure."
+   },
+   {
+    "heading": "Cost of living: income, rent and home values",
+    "text": "The median household income in Los Angeles is $81,939 per year, according to the same ACS data set. However, the median gross rent stands at $1,933 per month, and the median value of owner‑occupied homes is $921,200. Only about 36% of occupied housing units are owner‑occupied, reflecting the high cost of entry for buyers. Prospective residents should weigh these figures against their budget, as housing costs are a significant portion of expenses in the city."
+   },
+   {
+    "heading": "Geographic size and layout",
+    "text": "Covering roughly 469 square miles of land and 34.0 square miles of water, Los Angeles spans 502.7 square miles in total. The city stretches 44 miles from north to south and 29 miles from east to west, with a perimeter of 342 miles. Its terrain includes valleys and hills, leading to multiple grid patterns rather than a single street layout. The highest point within city limits is Mount Lukens at 5,074 feet, offering scenic views but also influencing traffic routes."
+   },
+   {
+    "heading": "Traffic challenges in Los Angeles",
+    "text": "According to TomTom’s annual traffic index, Los Angeles drivers spend an additional 92 hours in traffic each year—roughly the equivalent of a full workweek stuck behind the wheel.  During peak rush‑hour periods, congestion climbs to an 80 percent level, turning even short trips into unpredictable, lengthy ordeals.  The city’s sheer size amplifies the problem: it stretches 44 miles north‑to‑south and 29 miles east‑to‑west, with a 342‑mile perimeter that weaves through valleys, hills, and coastal plains.  Major arteries such as Sepulveda Boulevard (43 miles) and Foothill Boulevard (over 60 miles) snake across this sprawling landscape, yet the combination of a dense population—about 3.87 million residents within city limits and a metropolitan area of 12.9 million—means thousands of vehicles compete for limited roadway capacity daily.\n\nThe grid‑like street pattern, fragmented by rugged terrain and separate valley grids, further complicates traffic flow.  Even affluent neighborhoods, where the median household income sits at $81,939, are not immune; commuters from these areas still endure the same bottlenecks, often paying a median rent of $1,933 per month for proximity to work.  With only 36 percent of housing units owner‑occupied and a median home value of $921,200, many residents rely on public transit or car‑sharing, yet the transit network struggles to keep pace with demand.  The result is a city where the average resident—aged 37.2—spends nearly four full days each year navigating congestion, a significant quality‑of‑life trade‑off for those attracted by Los Angeles’ Mediterranean climate, cultural amenities, and iconic beaches."
+   },
+   {
+    "heading": "Climate, beaches and cultural attractions",
+    "text": "Los Angeles enjoys a classic Mediterranean climate, with mild, wet winters and warm, dry summers that allow outdoor activities year‑round. Average high temperatures hover in the mid‑70s °F (mid‑20s °C) during the summer, while winter lows rarely dip below 45 °F (7 °C), creating a comfortable environment for the city’s 3.87 million residents. This pleasant weather is a key factor behind the city’s expansive beachfronts—Santa Monica, Venice, Malibu, and Manhattan Beach—all within a 44‑mile north‑to‑south stretch that defines the coastline. The easy access to surf breaks, tide pools, and coastal bike paths has cemented Los Angeles as the birthplace of modern surf culture, drawing both locals and tourists to paddle, surf, and sunbathe almost daily.\n\nBeyond the sand, Los Angeles boasts a rich tapestry of cultural attractions. The area was originally home to the Tongva people, whose settlements such as Yaanga are commemorated in museums and historic markers. Spanish colonial roots are evident in landmarks like the El Presidio and the historic Olvera Street district, where adobe structures coexist with vibrant street art. The city’s entertainment industry—Hollywood studios, world‑class theaters, and a bustling music scene—draws talent from around the globe, reinforcing its reputation as a cultural powerhouse. With a median household income of $81,939 and a median age of 37.2, the diverse, relatively young population enjoys a lifestyle that blends sun‑soaked recreation with a dynamic arts and history scene, making the climate, beaches, and cultural assets some of Los Angeles’s most compelling draws."
+   }
+  ],
+  "faq": [
+   {
+    "q": "What is the population of Los Angeles and how does it rank nationally?",
+    "a": "Los Angeles has an estimated 3,857,263 residents, making it the most populous city in California and the second‑most populous city in the United States."
+   },
+   {
+    "q": "How large is the city in terms of land area and geographic extent?",
+    "a": "The city covers about 469 square miles of land and 34.0 square miles of water, extending 44 miles north‑to‑south and 29 miles east‑to‑west with a 342‑mile perimeter."
+   },
+   {
+    "q": "What are the major traffic challenges faced by Los Angeles residents?",
+    "a": "Drivers spend an extra 92 hours in traffic each year, and peak rush‑hour congestion reaches 80 percent, making commutes long and unpredictable."
+   },
+   {
+    "q": "What is the climate like in Los Angeles and what natural features contribute to it?",
+    "a": "Los Angeles has a Mediterranean climate with mild winters and warm, dry summers. Its many beaches and coastal location foster a surf culture and pleasant weather year‑round."
+   }
+  ],
+  "conclusion": "Los Angeles offers a large, diverse economy, iconic climate and cultural amenities, but high housing costs and traffic congestion are real considerations. Weigh the median income against rent and home values, and factor in commute times when deciding if the city fits your lifestyle and budget.",
+  "paragraphs": [
+   "Los Angeles is the second‑most populous city in the United States with about 3.87 million residents. It offers a Mediterranean climate, world‑class entertainment, and a diverse economy, but high housing costs and notorious traffic can be challenging. Whether the city’s advantages outweigh its drawbacks depends on your priorities, budget, and lifestyle.",
+   "Los Angeles had an estimated population of 3,857,263 in the 2020‑2024 ACS 5‑year estimates, making it the most populous city in California and the second‑most populous city in the United States. The broader metropolitan area reaches 12.9 million people, while the combined statistical area of Greater Los Angeles tops 18 million. This scale creates a dynamic labor market and cultural scene, but also contributes to density‑related pressures on housing and infrastructure.",
+   "The median household income in Los Angeles is $81,939 per year, according to the same ACS data set. However, the median gross rent stands at $1,933 per month, and the median value of owner‑occupied homes is $921,200. Only about 36% of occupied housing units are owner‑occupied, reflecting the high cost of entry for buyers. Prospective residents should weigh these figures against their budget, as housing costs are a significant portion of expenses in the city.",
+   "Covering roughly 469 square miles of land and 34.0 square miles of water, Los Angeles spans 502.7 square miles in total. The city stretches 44 miles from north to south and 29 miles from east to west, with a perimeter of 342 miles. Its terrain includes valleys and hills, leading to multiple grid patterns rather than a single street layout. The highest point within city limits is Mount Lukens at 5,074 feet, offering scenic views but also influencing traffic routes.",
+   "According to TomTom’s annual traffic index, Los Angeles drivers spend an additional 92 hours in traffic each year—roughly the equivalent of a full workweek stuck behind the wheel.  During peak rush‑hour periods, congestion climbs to an 80 percent level, turning even short trips into unpredictable, lengthy ordeals.  The city’s sheer size amplifies the problem: it stretches 44 miles north‑to‑south and 29 miles east‑to‑west, with a 342‑mile perimeter that weaves through valleys, hills, and coastal plains.  Major arteries such as Sepulveda Boulevard (43 miles) and Foothill Boulevard (over 60 miles) snake across this sprawling landscape, yet the combination of a dense population—about 3.87 million residents within city limits and a metropolitan area of 12.9 million—means thousands of vehicles compete for limited roadway capacity daily.\n\nThe grid‑like street pattern, fragmented by rugged terrain and separate valley grids, further complicates traffic flow.  Even affluent neighborhoods, where the median household income sits at $81,939, are not immune; commuters from these areas still endure the same bottlenecks, often paying a median rent of $1,933 per month for proximity to work.  With only 36 percent of housing units owner‑occupied and a median home value of $921,200, many residents rely on public transit or car‑sharing, yet the transit network struggles to keep pace with demand.  The result is a city where the average resident—aged 37.2—spends nearly four full days each year navigating congestion, a significant quality‑of‑life trade‑off for those attracted by Los Angeles’ Mediterranean climate, cultural amenities, and iconic beaches.",
+   "Los Angeles enjoys a classic Mediterranean climate, with mild, wet winters and warm, dry summers that allow outdoor activities year‑round. Average high temperatures hover in the mid‑70s °F (mid‑20s °C) during the summer, while winter lows rarely dip below 45 °F (7 °C), creating a comfortable environment for the city’s 3.87 million residents. This pleasant weather is a key factor behind the city’s expansive beachfronts—Santa Monica, Venice, Malibu, and Manhattan Beach—all within a 44‑mile north‑to‑south stretch that defines the coastline. The easy access to surf breaks, tide pools, and coastal bike paths has cemented Los Angeles as the birthplace of modern surf culture, drawing both locals and tourists to paddle, surf, and sunbathe almost daily.\n\nBeyond the sand, Los Angeles boasts a rich tapestry of cultural attractions. The area was originally home to the Tongva people, whose settlements such as Yaanga are commemorated in museums and historic markers. Spanish colonial roots are evident in landmarks like the El Presidio and the historic Olvera Street district, where adobe structures coexist with vibrant street art. The city’s entertainment industry—Hollywood studios, world‑class theaters, and a bustling music scene—draws talent from around the globe, reinforcing its reputation as a cultural powerhouse. With a median household income of $81,939 and a median age of 37.2, the diverse, relatively young population enjoys a lifestyle that blends sun‑soaked recreation with a dynamic arts and history scene, making the climate, beaches, and cultural assets some of Los Angeles’s most compelling draws.",
+   "Los Angeles has an estimated 3,857,263 residents, making it the most populous city in California and the second‑most populous city in the United States.",
+   "The city covers about 469 square miles of land and 34.0 square miles of water, extending 44 miles north‑to‑south and 29 miles east‑to‑west with a 342‑mile perimeter.",
+   "Drivers spend an extra 92 hours in traffic each year, and peak rush‑hour congestion reaches 80 percent, making commutes long and unpredictable.",
+   "Los Angeles has a Mediterranean climate with mild winters and warm, dry summers. Its many beaches and coastal location foster a surf culture and pleasant weather year‑round.",
+   "Los Angeles offers a large, diverse economy, iconic climate and cultural amenities, but high housing costs and traffic congestion are real considerations. Weigh the median income against rent and home values, and factor in commute times when deciding if the city fits your lifestyle and budget."
+  ],
+  "sources": [
+   {
+    "title": "Wikipedia: Los Angeles",
+    "url": "https://en.wikipedia.org/wiki/Los_Angeles"
+   },
+   {
+    "title": "Wikivoyage: Los Angeles",
+    "url": "https://en.wikivoyage.org/wiki/Los_Angeles"
+   },
+   {
+    "title": "U.S. Census Bureau ACS 2020-2024",
+    "url": "https://www.census.gov/programs-surveys/acs"
+   }
+  ],
+  "researched": true,
+  "date": "Nov 19, 2026",
+  "iso": "2026-11-19",
+  "ts": 1795119064.485472,
+  "image": "/img/is-los-angeles-a-good-place-to-live-pros-and-cons.jpg",
+  "img_v": 2
  }
 ]
